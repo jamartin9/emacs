@@ -1,7 +1,15 @@
-.spacemacs.env
-README.sh
-# protonfixes layer
-.pyc
-__init__.py
-# guix
+# generated
+README.el
+torrc.el
+guix-channels.el
+shepherd.el
+searx.el
+protonfixes.el
+*.ps1
+Makefile
+.torrc
 shepherd.log
+.orgids
+searx.yml
+# protonfixes
+*.py

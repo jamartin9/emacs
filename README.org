@@ -1,8 +1,9 @@
 * Emacs configuration
 ** Clone
+Branch names diverging and "." complicate fetching the correct heads.
 #+NAME: clone
 #+BEGIN_SRC sh :tangle no
-git clone --single-branch --recurse-submodules --shallow-submodules --depth=1 https://www.github.com/jamartin9/emacs-config
+git clone --single-branch --recurse-submodules --shallow-submodules --depth=1 git@github.com:jamartin9/emacs-config.git
 # get branch heads
 git submodule foreach '
 if [ "$path" = "doom-emacs" ]; then
@@ -11,44 +12,83 @@ else
     git checkout master
 fi
 '
-
 #+END_SRC
 
 ** Install
 *** make install
 **** tangle
+Emacs untangles the script from the org file (using noweb to copy/eval code).
 #+NAME: tangle
 #+BEGIN_SRC sh :tangle no
-emacs -Q --batch README.org --eval="(org-mode)" -f org-babel-tangle
+./doom-emacs/bin/org-tangle ./README.org
 #+END_SRC
 **** link
-#+NAME: link
-#+BEGIN_SRC sh :tangle yes :shebang #!/usr/bin/env sh
-emacs -Q --batch --eval='
-        (if (> emacs-major-version 26)
-                (make-symbolic-link (expand-file-name "doom-emacs") (concat (file-name-as-directory (if (getenv "XDG_CONFIG_HOME") (getenv "XDG_CONFIG_HOME") (concat (file-name-as-directory (getenv "HOME")) ".config"))) "emacs") 1)
-                (make-symbolic-link (expand-file-name "doom-emacs") (expand-file-name ".emacs.d" (getenv "HOME")) 1))'
-emacs -Q --batch --eval='(make-symbolic-link (expand-file-name ".") (concat (file-name-as-directory (if (getenv "XDG_CONFIG_HOME") (getenv "XDG_CONFIG_HOME") (concat (file-name-as-directory (getenv "HOME")) ".config"))) "doom") 1)'
+Each org file tangles same named script for installation.
+The script(s) need emacs and the script on the PATH or in the CWD.
+#+NAME: link-README
+#+BEGIN_SRC emacs-lisp :tangle README.ps1 :shebang "\":\"; emacs -Q --script README.ps1 -- \"$@ $args\" ; exit $? # -*- mode: emacs-lisp; lexical-binding: t; -*-"
+(ignore-errors
+  (if (> emacs-major-version 26)
+      (make-symbolic-link (expand-file-name "doom-emacs") (concat (file-name-as-directory (if (getenv "XDG_CONFIG_HOME") (getenv "XDG_CONFIG_HOME") (concat (file-name-as-directory (getenv "HOME")) ".config"))) "emacs") 1)
+    (make-symbolic-link (expand-file-name "doom-emacs") (expand-file-name ".emacs.d" (getenv "HOME")) 1)))
+(ignore-errors
+  (make-symbolic-link (expand-file-name ".") (concat (file-name-as-directory (if (getenv "XDG_CONFIG_HOME") (getenv "XDG_CONFIG_HOME") (concat (file-name-as-directory (getenv "HOME")) ".config"))) "doom") 1))
 #+END_SRC
 **** run
+The one line org-mode 'shebang' is a multipart shell/powershell wrapper.
+Passed arguments to the elisp script are available by argv (ignore “–”, “$@ ” and the trailing space during parsing).
+#+NAME: run-wrapper
+#+BEGIN_SRC sh :tangle no
+":"; emacs -Q --script README.ps1 -- "$@ $args" ; exit $? # -*- mode: emacs-lisp; lexical-binding: t; -*-
+#+END_SRC
+Run either script and sync doom.
 #+NAME: run
 #+BEGIN_SRC sh :tangle no
-./README.sh # run install script
+./README.ps1 # run link script
 ./doom-emacs/bin/doom sync # install doom
 #+END_SRC
 ** Update
 *** make update
 **** upstream merge
+update from the remotes and then our forks.
 #+NAME: update
-#+BEGIN_SRC sh :tangle no
-git submodule update --recursive --remote
-git -C doom-emacs remote add upstream https://github.com/hlissner/doom-emacs.git || true
-git -C doom-emacs fetch --all
-git -C doom-emacs merge upstream/develop # update-doom-emacs
-./doom-emacs/bin/doom upgrade # update-packages
+#+BEGIN_SRC makefile :tangle no
+update:
+	git submodule update --recursive --remote
+	git -C doom-emacs remote add upstream https://github.com/hlissner/doom-emacs.git || true
+	git -C doom-emacs fetch --all
+	git -C doom-emacs merge upstream/develop # update-doom-emacs
+	./doom-emacs/bin/doom upgrade # update-packages
 #+END_SRC
-**** remote merge
-#+NAME: update
-#+BEGIN_SRC sh :tangle no
-git submodule update --recursive --remote
+** Makefile
+#+NAME: Makefile
+#+BEGIN_SRC makefile :tangle Makefile :noweb yes
+ORG_FILES ::= $(wildcard *.org)
+PS_FILES ::= $(patsubst %.org, %.ps1, $(ORG_FILES)) # scripts
+
+.PHONY: prune clean update install clean-guix
+
+all: $(PS_FILES)
+
+prune:
+	rm -f *.org\~ .torrc\~ *.py\~ *.ps1\~ searx.yml~
+
+clean: prune
+	rm -f $(PS_FILES) Makefile .torrc *.py searx.yml
+
+clean-guix:
+	guix package -d
+	guix pull -d
+	guix gc
+	guix pull #--disable-authentication
+
+%.ps1: %.org
+	./doom-emacs/bin/org-tangle $<
+	./$@
+
+<<update>>
+
+install: README.ps1
+	./$<
+	./doom-emacs/bin/doom sync
 #+END_SRC

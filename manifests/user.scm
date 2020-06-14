@@ -1,51 +1,57 @@
-;;
 ;; Manifest for development env
-;;
-;; https://git.savannah.gnu.org/cgit/guix.git/plain/etc/guix-install.sh -> guix
 (specifications->manifest
  '(
    ;; basic
-   "emacs"
-   ;;"git"
-   ;;"busybox" ;; coreutils ;; binutils
+   "emacs-pgtk-native-comp" ;; nativecomp merged in 28
+   "git"
+   "guix"
+   "guile"
    ;;"gnupg"
-   ;;"glibc-utf8-locales" ; should be in default profile
-   ;;"guix"
-   ;;"guile"
+   ;;"zfs"
 
-   ;;"perf"
-   ;;"openssh" ; "dropbear"
    ;; C dev
-   ;;"make"
-   ;;"glibc"
-   ;;"gcc"
-   ;;"gdb"
-   ;;"clang" ; lldb
+   ;;"make" ;; "cmake"
+   ;;"glibc" ;; "musl"
+   ;;"glibc-utf8-locales"
+   ;;"gcc" ;;"clang"
+   ;;"gdb" ;;"lldb"
+   ;;"binutils"
 
    ;; java
    ;;"openjdk"
+   ;;"maven"
+   ;;"leiningen"
+   ;;"clojure"
+
+   ;; julia
+   ;;"julia"
 
    ;; shell
+   ;;"bash"
    ;;"htop"
-   ;;"zsh"
+   ;;"perf"
    ;;"xclip"
    ;;"bc"
    ;;"jq"
-   ;;"gawk"
-   ;;"coreutils"
+   ;;"coreutils" ;;"busybox"
    ;;"less"
-   ;;"wget"
    ;;"gzip"
+   ;;"fdisk" ;;"gparted"
+   ;;"wget"
+   ;;"diffutils"
+   ;;"findutils"
    ;;"tar"
+   ;;"gawk"
    ;;"which"
    ;;"sed"
    ;;"grep"
-   ;;"diffutils"
    ;;"patch"
-   ;;"findutils"
-   ;;"fdisk"
+   ;;
+   ;;"gash"
+   ;;"gash-utils"
 
    ;; apps
+   ;;"wine64"; "wine"
    ;;"winetricks"
    ;;"clamav"
    ;;"filezilla"
@@ -58,6 +64,8 @@
    ;;"sqlite"
    ;;"tigervnc-client"
    ;;"tigervnc-server"
+   ;;"steam"
+   ;;"steam-nvidia"
 
    ;; docs
    ;;"libreoffice"
@@ -75,8 +83,9 @@
    ;;"mediainfo"
    ;;"ffmpeg"
    ;;"gnuplot"
-   ;; makemkv
-   ;; flamegraph
+   ;;"makemkv"
+   ;;"flamegraph"
+   ;;"youtube-dl"
 
    ;; net
    ;;"curl"
@@ -84,9 +93,19 @@
    ;;"bind:utils"
    ;;"nmap"
    ;;"tor"
+   ;;"torsocks"
+   ;;"python-stem"
+   ;;"onionshare"
+   ;;"ungoogled-chromium"; --with-graft=mesa=nvda
    ;;"iptables"
    ;;"ebtables"
    ;;"wireshark"
    ;;"netcat"
    ;;"net-tools"
+   ;;"openssh" ;;"dropbear"
+   ;;"wireguard-tools"
+
+   ;; Desktop
+   ;;"xfce"; --with-graft=mesa=nvda
+   ;;"nvidia-driver"; add udev rules, mesa graft and xorg modules rules
    ))

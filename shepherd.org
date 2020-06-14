@@ -1,0 +1,12 @@
+#+TITLE: Shepherd
+** Link shepherd
+#+NAME: link-shepherd-el
+#+BEGIN_SRC elisp :tangle shepherd.ps1 :shebang "\":\"; emacs -Q --script shepherd.ps1 -- \"$@ $args\" ; exit $? # -*- mode: emacs-lisp; lexical-binding: t; -*-"
+(ignore-errors
+(let ((shepherd-dir (file-name-as-directory (concat (if (getenv "XDG_CONFIG_HOME") (file-name-as-directory (getenv "XDG_CONFIG_HOME"))
+                                                    (file-name-as-directory (concat (file-name-as-directory (getenv "HOME")) ".config")))
+                                                  "shepherd"))))
+    (if (not (or (file-exists-p shepherd-dir) (file-symlink-p shepherd-dir)))
+        (make-symbolic-link (concat (file-name-as-directory (expand-file-name ".")) (file-name-as-directory "shepherd")) shepherd-dir 1)))
+        )
+#+END_SRC

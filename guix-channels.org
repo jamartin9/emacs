@@ -1,0 +1,14 @@
+#+TITLE: Guix Channels
+** Link guix channels
+#+NAME: link-guixchannels-el
+#+BEGIN_SRC elisp :tangle guix-channels.ps1 :shebang "\":\"; emacs -Q --script guix-channels.ps1 -- \"$@ $args\" ; exit $? # -*- mode: emacs-lisp; lexical-binding: t; -*-"
+(ignore-errors
+(let* ((guix-dir (file-name-as-directory (concat (if (getenv "XDG_CONFIG_HOME") (file-name-as-directory (getenv "XDG_CONFIG_HOME"))
+                                                    (file-name-as-directory (concat (file-name-as-directory (getenv "HOME")) ".config")))
+                                                  "guix")))
+        (guix-channel-file (concat guix-dir "channels.scm")))
+    (if (not (file-exists-p guix-dir))
+        (make-directory guix-dir))
+    (if (not (or (file-exists-p guix-channel-file) (file-symlink-p guix-channel-file)))
+        (make-symbolic-link (concat (file-name-as-directory (expand-file-name ".")) (file-name-as-directory "channels") "channels.scm") guix-channel-file 1))))
+#+END_SRC

@@ -1,18 +1,32 @@
-* Blogs                                                              :elfeed:
-** entry-title: \(linux\|linus\|ubuntu\|kde\|gnome\)                  :linux:
-** http://git-annex.branchable.com/design/assistant/blog/index.rss :mustread:
-** http://feeds.feedburner.com/InformationIsBeautiful
-** [[http://orgmode.org][Org Mode Links supported as well]]
-** Software Development                                                 :dev:
-*** Emacs                                                    :emacs:mustread:
-**** http://www.terminally-incoherent.com/blog/feed/
-**** http://nullprogram.com/feed/
-**** entry-title: \(emacs\|org-mode\)
-**** https://planet.emacslife.com/atom.xml
-*** Web Development                                                     :web:
-**** http://feeds.feedburner.com/symfony/blog
-**** http://feeds.feedburner.com/qooxdoo/blog/content
-*** Eclipse                                                         :eclipse:
-**** http://blog.eclipse-tips.com/feeds/posts/default?alt=rss
-**** http://ed-merks.blogspot.com/feeds/posts/default
-**** http://feeds.feedburner.com/eclipselive
+* Feeds :elfeed:
+** Software Development :dev:
+*** Guile :lisp:
+**** https://www.gnu.org/software/guile/news/feed.xml
+*** Guix :packages:
+**** https://guix.gnu.org/feeds/blog.atom
+*** Wine :games:
+**** https://www.winehq.org/news/rss
+*** Linux :linux:
+**** https://lwn.net/headlines/newrss
+**** https://www.kernel.org/feeds/kdist.xml
+*** Emacs :emacs:mustread:
+**** https://savannah.gnu.org/news/atom.php?group=emacs
+**** https://github.com/hlissner/doom-emacs/commits/develop.atom
+*** Transmission :torrent:
+**** https://github.com/transmission/transmission/releases.atom
+*** Tor :security:
+**** https://blog.torproject.org/rss.xml
+*** GCC :compiler:
+**** https://savannah.gnu.org/news/atom.php?group=gcc
+*** Matrix :chat:
+**** https://matrix.org/blog/feed
+*** Qemu :vm:
+**** https://github.com/qemu/qemu/releases.atom
+** News :news:
+**** world
+**** politics
+**** tech
+** Blogs :blogs:
+**** Cryptography
+**** Security
+**** Research

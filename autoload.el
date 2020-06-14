@@ -1,8 +1,6 @@
 ;;; $DOOMDIR/autoload.el -*- lexical-binding: t; -*-
 
-;;;
 ;;; set user-env
-;;;
 
 ;;;###autoload
 (defun jam/set-env ()
@@ -20,72 +18,28 @@
                          ":" (concat (file-name-as-directory (getenv "XDG_CONFIG_HOME")) (file-name-as-directory "doom") (file-name-as-directory "doom-emacs") "bin")
                          ))
   ;;(setenv "JAVA_TOOL_OPTIONS" "-XX:+PrintFlagsFinal -XX:+UnlockDiagnosticVMOptions -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCI -XX:+UseJVMCICompiler -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=heapdump.hprof -XX:StartFlightRecording=disk=true,dumponexit=true,filename=recording.jfr,maxsize=1024m,maxage=1d,settings=profile,path-to-gc-roots=true -Xlog:gc:gc.log:utctime,uptime,tid,level:filecount=10,filesize=128m -XX:NativeMemoryTracking=detail -XX:+PreserveFramePointer")
-  ;;(setenv "GUILE_LOAD_PATH" (concat
-  ;;                           (expand-file-name "~/.guix-profile/share/guile/2.2")
-  ;;                           ":" (expand-file-name "~/.guix-profile/share/guile/3.0")))
-  ;;(setenv "GUILE_LOAD_COMPILED_PATH" (concat (expand-file-name "~/.guix-profile/lib/guile/2.2/ccache")
-  ;;                                           ":" (expand-file-name "~/.guix-profile/lib/guile/3.0/ccache")))
-  ;;(setenv "GUIX_LOCPATH" (concat (file-name-as-directory (getenv "HOME"))
-  ;;                               (file-name-as-directory ".guix-profile")
-  ;;                               (file-name-as-directory "lib") "locale"))
   )
 
-;;;
-;;; custom zsh
-;;;
-
-;;;###autoload
-(defun jam/custom-shell-link ()
-  (interactive)
-  (let ((zsh-dir (concat (if (getenv "XDG_CONFIG_HOME") (file-name-as-directory (getenv "XDG_CONFIG_HOME"))
-                           (file-name-as-directory (concat (file-name-as-directory (getenv "HOME")) ".config")))
-                         "zsh"))
-        (home-zshrc (concat (file-name-as-directory (getenv "HOME")) ".zshrc")))
-    (if (not (or (file-exists-p zsh-dir) (file-symlink-p zsh-dir)))
-        (make-symbolic-link (concat (expand-file-name doom-private-dir) "zsh-config") zsh-dir 1))
-    (if (not (or (file-exists-p home-zshrc) (file-symlink-p home-zshrc)))
-        (make-symbolic-link (concat (expand-file-name doom-private-dir) (file-name-as-directory "zsh-config") ".zshrc") home-zshrc 1))))
-
-;;;
-;;; custom protonfixes
-;;;
-
-;;;###autoload
-(defun jam/protonfixes-link-local ()
-  (interactive)
-  (let* ((proton-dir (concat (if (getenv "XDG_CONFIG_HOME") (file-name-as-directory (getenv "XDG_CONFIG_HOME"))
-                              (file-name-as-directory (concat (file-name-as-directory (getenv "HOME")) ".config")))
-                            "protonfixes"))
-        (localfixes-dir (concat (file-name-as-directory proton-dir) "localfixes")))
-    (if (not (file-exists-p proton-dir))
-        (make-directory proton-dir))
-    (if (not (or (file-exists-p localfixes-dir) (file-symlink-p localfixes-dir)))
-        (make-symbolic-link (concat (expand-file-name doom-private-dir) "localfixes") localfixes-dir 1))))
-
-;;;
 ;;; system packages
-;;;
 
 ;;;###autoload
 (defun jam/syspkgs-install ()
   (interactive)
-  (let ((pkglist (list "expac" "sudo" "emacs" "zsh" "firefox" "chromium" "veracrypt" "ufw" "gufw" "signal-desktop" "torbrowser-launcher")) ;; expac is needed for syspkgs -_-
+  (let ((pkglist (list "expac" "sudo" "bash" "veracrypt" "ufw" "gufw" "signal-desktop" "torbrowser-launcher")) ;; expac is needed for syspkgs -_-
         (system-packages-use-sudo t)
-        (system-packages-package-manager 'pacman)) ;; "steam-devices" "python-pip" "emacs-native-comp-git"
+        (system-packages-package-manager 'pacman)) ;; "steam-devices" "python-pip"
     ;;(use-package use-package-ensure-system-package
     ;;  :ensure t)
     (dolist (pkg pkglist)
       (progn
         (system-packages-ensure pkg)))))
 
-;;;
 ;;; GUIX
-;;;
 
 ;;;###autoload
 (defun jam/guix-source (filename)
   "Update environment variables from a shell source file."
-  (interactive "fSource file: ")
+  (interactive "s")
   (message "Sourcing environment from `%s'..."
            filename)
   (with-temp-buffer
@@ -94,7 +48,6 @@
                    '(4))
     (let ((envvar-re "declare -x \\([^=]+\\)=\\(.*\\)$"))
       ;; Remove environment variables
-
       (while (search-forward-regexp (concat "^-" envvar-re)
                                     nil
                                     t)
@@ -116,47 +69,56 @@
            filename))
 
 ;;;###autoload
-(defun jam/guix-link-channels ()
+(defun jam/guix-env()
   (interactive)
-  (let* ((guix-dir (file-name-as-directory (concat (if (getenv "XDG_CONFIG_HOME") (file-name-as-directory (getenv "XDG_CONFIG_HOME"))
-                                                    (file-name-as-directory (concat (file-name-as-directory (getenv "HOME")) ".config")))
-                                                  "guix")))
-        (guix-channel-file (concat guix-dir "channels.scm")))
-    (if (not (file-exists-p guix-dir))
-        (make-directory guix-dir))
-    (if (not (or (file-exists-p guix-channel-file) (file-symlink-p guix-channel-file)))
-        (make-symbolic-link (concat (expand-file-name doom-private-dir) (file-name-as-directory "channels") "channels.scm") guix-channel-file 1))))
+  (setenv "GUIX_DAEMON_SOCKET" (concat (file-name-as-directory (getenv "XDG_DATA_HOME"))
+                                       (file-name-as-directory "guix")
+                                       (file-name-as-directory "var")
+                                       (file-name-as-directory "guix")
+                                       (file-name-as-directory "daemon-socket") "socket"))
+  (setenv "GUIX_DATABASE_DIRECTORY" (concat (file-name-as-directory (getenv "XDG_DATA_HOME"))
+                                            (file-name-as-directory "guix")
+                                            (file-name-as-directory "var")
+                                            (file-name-as-directory "guix") "db"))
+  (setenv "GUIX_LOG_DIRECTORY" (concat (file-name-as-directory (getenv "XDG_DATA_HOME"))
+                                       (file-name-as-directory "guix")
+                                       (file-name-as-directory "var")
+                                       (file-name-as-directory "log") "guix"))
+  (setenv "GUIX_STATE_DIRECTORY" (concat (file-name-as-directory (getenv "XDG_DATA_HOME"))
+                                         (file-name-as-directory "guix")
+                                         (file-name-as-directory "var") "guix"))
+  (setenv "GUIX_CONFIGURATION_DIRECTORY" (concat (file-name-as-directory (getenv "XDG_CONFIG_HOME"))
+                                                 (file-name-as-directory "guix") "etc"))
+  (setenv "GUIX_LOCPATH" (concat (file-name-as-directory (getenv "XDG_DATA_HOME"))
+                                 (file-name-as-directory "guix")
+                                 (file-name-as-directory "var")
+                                 (file-name-as-directory "guix")
+                                 (file-name-as-directory "profiles")
+                                 (file-name-as-directory "per-user")
+                                 (file-name-as-directory "root")
+                                 (file-name-as-directory "guix-profile")
+                                 (file-name-as-directory "lib") "locale"))
+  (setenv "NIX_STORE" (concat (file-name-as-directory (getenv "XDG_DATA_HOME"))
+                              (file-name-as-directory "guix")
+                              (file-name-as-directory "gnu") "store"))
+  (setenv "PATH" (concat (getenv "PATH")
+                         ":" (concat (file-name-as-directory (getenv "XDG_DATA_HOME"))
+                                     (file-name-as-directory "guix") "bin")))
+  )
 
 ;;;###autoload
-(defun jam/guix-link-shepherd ()
+(defun jam/guix-default-profile ()
   (interactive)
-  (let ((shepherd-dir (file-name-as-directory (concat (if (getenv "XDG_CONFIG_HOME") (file-name-as-directory (getenv "XDG_CONFIG_HOME"))
-                                                    (file-name-as-directory (concat (file-name-as-directory (getenv "HOME")) ".config")))
-                                                  "shepherd"))))
-    (if (not (or (file-exists-p shepherd-dir) (file-symlink-p shepherd-dir)))
-        (make-symbolic-link (concat (expand-file-name doom-private-dir) (file-name-as-directory "shepherd")) shepherd-dir 1))))
+  (jam/guix-source (concat (file-name-as-directory (getenv "HOME"))
+                           (file-name-as-directory ".guix-profile")
+                           (file-name-as-directory "etc")
+                           "profile"))
+  (jam/guix-source (concat (file-name-as-directory (getenv "XDG_CONFIG_HOME"))
+                           (file-name-as-directory "guix")
+                           (file-name-as-directory "etc")
+                           "profile")))
 
-;;;###autoload
-(defun jam/default-prof ()
-  "TODO: ensure glibc-locales are installed in default prof and its profile is sourced")
-
-;;;###autoload
-(defun jam/install-guix ()
-  "TODO: script install/url hash check for update")
-
-;;;
-;;; fix kbd light
-;;;
-
-;;;###autoload
-(defun jam/create-xmod ()
-  "creates xmod file"
-  (when (not (file-exists-p (expand-file-name "~/.Xmodmap")))
-    (write-region "add mod3 = Scroll_Lock" nil (expand-file-name "~/.Xmodmap"))))
-
-;;;
 ;;; Main
-;;;
 
 ;;;###autoload
 (defun jam/init ()
@@ -165,9 +127,7 @@
   ;; Copy-cut-paste-undo
   (cua-mode t)
   (jam/set-env)
-  ;;(jam/create-xmod)
-  (jam/custom-shell-link)
-  (jam/protonfixes-link-local)
+  ;;(jam/guix-env)
+  ;;(jam/guix-default-profile)
   ;;(jam/syspkgs-install)
-  (jam/guix-link-shepherd)
-  (jam/guix-link-channels))
+ )

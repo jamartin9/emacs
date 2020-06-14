@@ -1,0 +1,66 @@
+#+TITLE: Torrc
+* TorRc config
+** Link .torrc
+#+NAME: link-torrc-el
+#+BEGIN_SRC emacs-lisp :tangle torrc.ps1 :shebang "\":\"; emacs -Q --script torrc.ps1 -- \"$@ $args\" ; exit $? # -*- mode: emacs-lisp; lexical-binding: t; -*-"
+(ignore-errors
+  (let* ((tor-confdir (concat (file-name-as-directory (if (getenv "XDG_CONFIG_HOME")
+                                                          (getenv "XDG_CONFIG_HOME")
+                                                        (concat (file-name-as-directory (getenv "HOME"))
+                                                                ".config")))
+                              "tor"))
+        (tor-conf (concat (file-name-as-directory tor-confdir) ".torrc")))
+    (if (not (file-exists-p tor-confdir))
+        (progn (make-directory tor-confdir)
+               (set-file-modes tor-confdir #o700)))
+    (if (not (or (file-exists-p tor-conf) (file-symlink-p tor-conf)))
+        (make-symbolic-link (expand-file-name ".torrc") tor-conf 1))))
+#+END_SRC
+** Data Directory
+#+NAME: datadir
+#+BEGIN_SRC emacs-lisp :tangle no
+(concat (if (getenv "XDG_CONFIG_HOME")
+            (file-name-as-directory (getenv "XDG_CONFIG_HOME"))
+          (file-name-as-directory (concat (file-name-as-directory (getenv "HOME")) ".config")))
+        "tor")
+#+END_SRC
+** Control Socket
+#+NAME: socket
+#+BEGIN_SRC emacs-lisp :tangle no
+(concat (file-name-as-directory
+         (concat (if (getenv "XDG_CONFIG_HOME")
+                     (file-name-as-directory (getenv "XDG_CONFIG_HOME"))
+                   (file-name-as-directory (concat (file-name-as-directory (getenv "HOME")) ".config")))
+                 "tor"))
+        "torSocket")
+#+END_SRC
+** .torrc
+#+NAME: .torrc
+#+BEGIN_SRC conf :tangle .torrc :noweb yes
+StrictNodes 1
+AvoidDiskWrites 1
+#UseBridges 1
+
+# does not work with bridges
+EntryNodes {us}
+
+ExcludeExitNodes {il},{gb},{ca},{nz},{au},{us}
+ExcludeNodes BadExit,{il},{gb},{ca},{nz},{au}
+
+#ExitNodes {us}
+
+# fteproxy configuration
+#ClientTransportPlugin fte exec /usr/share/tor/PluggableTransports/fteproxy.wrapper --managed
+
+
+# obfs4proxy configuration
+#ClientTransportPlugin obfs2,obfs3,obfs4,scramblesuit exec /usr/share/tor/PluggableTransports/obfs4proxy
+
+
+DataDirectory <<datadir()>>
+ControlSocket <<socket()>>
+CookieAuthentication 1
+
+#HiddenServiceDir /Library/Tor/var/lib/tor/hidden_service/
+#HiddenServicePort 80 unix:/path/to/socket
+#+END_SRC

@@ -3,11 +3,7 @@
 	url = https://github.com/jamartin9/guix-channel
 	update = merge
 	shallow = true
-[submodule "zsh-config"]
-	path = zsh-config
-	url = https://github.com/jamartin9/zsh-config
-	update = merge
-	shallow = true
+	branch = master
 [submodule "doom-emacs"]
 	path = doom-emacs
 	url = https://github.com/jamartin9/doom-emacs
