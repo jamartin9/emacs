@@ -14,6 +14,8 @@
 **** https://github.com/hlissner/doom-emacs/commits/develop.atom
 *** Transmission :torrent:
 **** https://github.com/transmission/transmission/releases.atom
+*** Searx :search:
+**** https://github.com/searx/searx/releases.atom
 *** Tor :security:
 **** https://blog.torproject.org/rss.xml
 *** GCC :compiler:
@@ -23,10 +25,19 @@
 *** Qemu :vm:
 **** https://github.com/qemu/qemu/releases.atom
 ** News :news:
-**** world
 **** politics
+***** videos :vid:
+****** www.youtube.com/feeds/videos.xml?channel_id=UCe02lGcO-ahAURWuxAJnjdA
+****** https://www.bitchute.com/feeds/rss/channel/Styxhexenhammer666
+***** reddit :reddit:
+****** http://www.reddit.com/r/news/.rss
 **** tech
+***** HN :hn:
+****** https://hnrss.org/newest
+***** CVE :cve:
+****** https://nvd.nist.gov/feeds/xml/cve/misc/nvd-rss-analyzed.xml
 ** Blogs :blogs:
 **** Cryptography
 **** Security
+***** https://www.schneier.com/feed/atom
 **** Research
