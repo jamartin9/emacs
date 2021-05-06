@@ -6,14 +6,24 @@
    "git"
    "guix"
    "guile"
+   "shepherd"
+   "glibc-utf8-locales"
+   "tor"
+   "python-searx"
+   "python-vanguards"
+   ;;"ungoogled-chromium-nvda"
+   ;;"firefox-nvda"
    ;;"gnupg"
    ;;"zfs"
+   ;;"transmission"
+   ;;"qemu"
+   ;;"steam-nvidia" ;; steam
+   ;;"wireguard-tools"
 
    ;; C dev
    ;;"make" ;; "cmake"
    ;;"glibc" ;; "musl"
-   ;;"glibc-utf8-locales"
-   ;;"gcc" ;;"clang"
+   ;;"gcc-toolchain" ;;"clang-toolchain"
    ;;"gdb" ;;"lldb"
    ;;"binutils"
 
@@ -56,16 +66,12 @@
    ;;"clamav"
    ;;"filezilla"
    ;;"lynx"
-   ;;"transmission"
-   ;;"qemu"
    ;;"libvirt"
    ;;"virt-manager"
    ;;"postgresql"
    ;;"sqlite"
    ;;"tigervnc-client"
    ;;"tigervnc-server"
-   ;;"steam"
-   ;;"steam-nvidia"
 
    ;; docs
    ;;"libreoffice"
@@ -92,18 +98,15 @@
    ;;"whois"
    ;;"bind:utils"
    ;;"nmap"
-   ;;"tor"
    ;;"torsocks"
-   ;;"python-stem"
+   ;;"python-onionbalance" ;;"python-stem"
    ;;"onionshare"
-   ;;"ungoogled-chromium"; --with-graft=mesa=nvda
    ;;"iptables"
    ;;"ebtables"
    ;;"wireshark"
    ;;"netcat"
    ;;"net-tools"
    ;;"openssh" ;;"dropbear"
-   ;;"wireguard-tools"
 
    ;; Desktop
    ;;"xfce"; --with-graft=mesa=nvda

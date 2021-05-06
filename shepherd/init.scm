@@ -46,8 +46,23 @@
    #:respawn? #t)
 
  (make <service>
-   #:provides '(searx)
+   #:provides '(vanguards)
    #:requires '(tor)
+   #:start (make-forkexec-constructor
+             `("vanguards" "--control_socket" ,(string-append (if (getenv "XDG_CONFIG_HOME") (getenv "XDG_CONFIG_HOME")
+                                     (string-append (getenv "HOME") file-name-separator-string ".config"))
+                                file-name-separator-string
+                                "tor"
+                                file-name-separator-string
+                                "torSocket"
+                                )))
+   #:stop (make-kill-destructor)
+   #:respawn? #t)
+
+ (make <service>
+   #:provides '(searx)
+   #:requires '(vanguards
+                tor)
    #:start (make-forkexec-constructor
              `("searx-run")
              #:environment-variables `(,(string-append "SEARX_SETTINGS_PATH=" (if (getenv "XDG_CONFIG_HOME")
@@ -67,8 +82,9 @@
 
 (action 'shepherd 'daemonize)
 (for-each start '(
+                  ;vanguards
+                  ;tor
                   emacs
-                  ;;guix-daemon
-                  tor
+                  ;guix-daemon
                   searx
                   ))
