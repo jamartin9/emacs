@@ -2,23 +2,23 @@
 (specifications->manifest
  '(
    ;; basic
-   "emacs-pgtk-native-comp" ;; nativecomp merged in 28
-   "git"
+   "emacs-pgtk-native-comp"
+   ;;"git"
    "guix"
    "guile"
    "shepherd"
    "glibc-utf8-locales"
-   "tor"
+   ;;"tor"
    "python-searx"
    "python-vanguards"
    ;;"ungoogled-chromium-nvda"
    ;;"firefox-nvda"
    ;;"gnupg"
-   ;;"zfs"
    ;;"transmission"
-   ;;"qemu"
    ;;"steam-nvidia" ;; steam
-   ;;"wireguard-tools"
+   ;;"password-store"
+   ;;"qemu"
+   ;;"zfs"
 
    ;; C dev
    ;;"make" ;; "cmake"
@@ -37,6 +37,7 @@
    ;;"julia"
 
    ;; shell
+   ;;"shellcheck"
    ;;"bash"
    ;;"htop"
    ;;"perf"
@@ -98,7 +99,6 @@
    ;;"whois"
    ;;"bind:utils"
    ;;"nmap"
-   ;;"torsocks"
    ;;"python-onionbalance" ;;"python-stem"
    ;;"onionshare"
    ;;"iptables"
@@ -107,6 +107,9 @@
    ;;"netcat"
    ;;"net-tools"
    ;;"openssh" ;;"dropbear"
+   ;;"wireguard-tools"
+   ;;"torsocks"
+   ;;"socat"
 
    ;; Desktop
    ;;"xfce"; --with-graft=mesa=nvda

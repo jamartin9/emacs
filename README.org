@@ -58,7 +58,7 @@ update:
 	git -C doom-emacs remote add upstream https://github.com/hlissner/doom-emacs.git || true
 	git -C doom-emacs fetch --all
 	git -C doom-emacs merge upstream/develop # update-doom-emacs
-	./doom-emacs/bin/doom upgrade # update-packages
+	./doom-emacs/bin/doom sync -upe # update-packages
 #+END_SRC
 ** Makefile
 #+NAME: Makefile
@@ -80,7 +80,7 @@ clean-guix:
 	guix package -d
 	guix pull -d
 	guix gc
-	guix pull #--disable-authentication
+	guix pull #--disable-authentication --allow-downgrades
 
 %.ps1: %.org
 	./doom-emacs/bin/org-tangle $<

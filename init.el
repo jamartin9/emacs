@@ -46,7 +46,7 @@
        (lsp +peek)
        (magit +forge)             ; a git porcelain for Emacs
        lookup ;(lookup +dictionary +offine +docsets +xwidget) ;ripgrep, sqlite3, wordnet ; navigate your code and its documentation
-       ;;(pass +auth)              ; password manager for nerds
+       (pass +auth)              ; password manager for nerds
        ;;(docker +lsp)
        ;;pdf               ; pdf enhancements
        ;;ansible
@@ -58,10 +58,10 @@
        (org +gnuplot)               ; organize your plain life in plain text
        (scheme +guile)            ; a fully conniving family of lisps
        (clojure +lsp)           ; java with a lisp
-       (julia +lsp)             ; a better, faster MATLAB
-       (zig +lsp)
        (cc +lsp)               ; C/C++/Obj-C madness
-       (sh +lsp)                ; she sells {ba,z,fi}sh shells on the C xor
+       (zig +lsp)
+       ;;(sh +lsp)                ; she sells {ba,z,fi}sh shells on the C xor
+       ;;(julia +lsp)             ; a better, faster MATLAB
        ;;(rust +lsp)              ; Fe2O3.unwrap().unwrap().unwrap().unwrap()
        ;;(python +lsp)            ; beautiful is better than ugly
        ;;(web +lsp)               ; the tubes
