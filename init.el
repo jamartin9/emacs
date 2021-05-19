@@ -59,7 +59,7 @@
        (scheme +guile)            ; a fully conniving family of lisps
        (clojure +lsp)           ; java with a lisp
        (cc +lsp)               ; C/C++/Obj-C madness
-       (zig +lsp)
+       ;;(zig +lsp)
        ;;(sh +lsp)                ; she sells {ba,z,fi}sh shells on the C xor
        ;;(julia +lsp)             ; a better, faster MATLAB
        ;;(rust +lsp)              ; Fe2O3.unwrap().unwrap().unwrap().unwrap()

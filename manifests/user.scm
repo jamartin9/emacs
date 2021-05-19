@@ -10,7 +10,7 @@
    "glibc-utf8-locales"
    ;;"tor"
    "python-searx"
-   "python-vanguards"
+   "python-vanguards-git"
    ;;"ungoogled-chromium-nvda"
    ;;"firefox-nvda"
    ;;"gnupg"

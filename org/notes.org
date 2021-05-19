@@ -1,0 +1,333 @@
+* Notes
+quick notes for myself
+** avahi
+- local network discovery
+- port 5353 tcp/udp
+** xorg
+- mostly obe for wayland (minus nvidia drivers)
+- ttys if it locks up (ctrl+alt+f1-f6 & f7)
+- load nvidia module
+- ~/.Xmodmap has ~add mod3 = Scroll_Lock~ for led on scroll_lock
+** grub
+- rescue shell set for /dev/sda5
+  - prefix=(hd0,5)/boot/grub
+  - insmod linux
+  - set root=(hd0,5)
+  - linux (hd0,6)/vmlinuz-linux root=/dev/sda6
+  - initrd (hd0,6)/boot/initramfs-linux.img
+  - boot
+- single user mode on boot by adding single to the linux kernel line
+** pam
+- custom module configurations for authentication at various points
+** systemd
+*** bootctl
+- efi boot manager for stub kernel
+*** homectl
+- home mounting/pam on login
+*** journalctl
+- binary logging for services/boot
+*** sysctl
+- manages kernel params at runtime
+- ~net.ipv4.icmp_echo_ignore_all = 1~ in ~/etc/sysctl.conf~ or ~/etc/sysctl.d/90-override.conf~ to disable icmp
+*** systemctl
+**** targets
+- trees of dependencies
+**** services
+- environment, dependence, restarting and overrides via edit
+- manual edits require daemon-reload
+- activation via path, dbus, socket and targets
+- hooks within services like ExecStartPost/ExecStopPost
+- list ~systemctl list-unit-files~
+- list failed ~systemctl list-units --state failed~
+- deps ~systemctl list-dependencies --reverse~
+- mask with ~systemctl mask swap.target~
+**** timers
+- execution of units on timer to replace cron
+*** udev rules
+- devices rules for joysticks/zfs of how to label/map/access
+- eudev is systemd free and maintained by gentoo
+*** logind
+- login manager
+- gentoo maintains systemd free version
+*** misc
+- ~systemd-analyze --blame~ for boot times
+- user level service units in home dir
+- systemctl reboots/shutdown/hibernates
+- systemctl changes run levels as either set-default/isolate via the rescue, multi-user and graphical targets
+- can manage containers/cgroups
+- auto/mount units are made from /etc/fstab
+- swap units and device units are needed for management
+** polkit/rtkit/udisks
+- uses client lib/dbus to config special permissions for user access to network/mounts etc
+** zfs
+*** install
+- If given whole disk zfs will leave small partition at begin/end and mark it with a wholedisk property.
+  That small space is useful for uefi bootloader via:
+  ~mkfs.vfat -F 16 /dev/disk/by-uuid/XXXXXX~ and
+  ~grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=DISK1~.
+  A larger partition can allow proper fat32 fs type, grub installation(~--boot-directory~) and kernel/initramfs storage.
+  Partitions are still useful for getting more from the pool hardware.
+  The elevator/scheduler module option was removed from zfs after 4.12 kernel. udev rules should set the scheduler
+  on Linux for the IO elevator be none/noop and use zfs's internal one when given whole disks to reduce cpu.
+- add kernel module package (lic issues but ubuntu doesnt care)
+- add to initramfs via mkinitcpio/dracut
+  - ex. add zfs to HOOKS in ~/etc/defaults/mkinitcpio.conf~
+  - regen initramfs ~mkinitcpio -P~
+- update-grub with zfs root (if on root)
+- add pam module for auto decrypt/mount on user login ~/etc/pam.d/system-auth~
+  - ~auth       optional                    pam_exec.so      expose_authtok /sbin/zfs-pam-login~
+    - zfs-pam-login
+      - ~PASS=$(cat -)~
+      - ~zfs load-key "${ZFS_HOME_VOL}" <<< "${PASS}" || continue~
+      - ~zfs mount "${ZFS_HOME_VOL}" || true~
+*** TODO not able to mount as user bug? session is too late maybe? :zfs:
+      - ~auth       optional                    pam_zfs_key.so homes=zroot/data/home~
+      - ~password   optional                    pam_zfs_key.so homes=zroot/data/home~
+      - ~session    optional                    pam_zfs_key.so homes=zroot/data/home~
+- add systemd services for device scanning/import/automounting
+  - set cache if not scanning for pools ~zpool set cachefile=/etc/zfs/zpool.cache POOL~
+    - ~systemctl enable zfs-import-cache~
+    - ~systemctl enable zfs-import.target~
+  - enable mounts if not using ZED
+    - ~systemctl enable zfs-mount~
+    - ~systemctl enable zfs.target~
+- set arc memory in kernel params(grub), initramfs ~/etc/default/zfs~ or modprobe params ~/etc/modprobe.d/zfs.conf~
+- grub only supports certain zfs features, so a boot pool may be needed if using encrypted zfs on root
+*** usage
+- Pool Mangement
+  - scrub(error check), resilver(parity), trim(ssd), adding/removing disks are done via ~zpool~
+- Dataset Management
+  - Mounting, keys, snapshots, rollbacks are done via ~zfs~
+*** notes
+- If you lose a vdev in a pool you LOSE THE POOL
+- Autoexpand allows the 'safe' thing of smallest partition that can grow.
+  - Manual config can get more with same redundancy if planned correctly
+- When expanding rebalancing is not done leaving potentially higher resilver times in the future increasing the chance of cascading failure.
+  - snapshot, make tmp dataset, send | recv to new dataset to redistribute blocks, destroy old snapshot, rename dataset
+- Sparse files can be useful for testing/migrating setups if the enough storage is actually present(piecemeal the datasets)
+- enable compression and relatime for normal timestamps
+- SLOG requires devices that will write data on power loss...
+- SPECIAL vdevs store metadata (good for ssd) but need redundancy as they can take the pool down
+- Spare drive is mostly to help resilver time (zed auto replace) but draid seems more comprehensive
+- Single device zfs can use the COPIES attribute to help redundancy
+- /tmp sync off
+- enable sharing on dataset for nfs
+- L2ARC/ssd cache with persistence(2.0+) for arc speed
+  - L2ARC has default l2arc_write_max of 8MiB/s and 8MiB/s burst (to fill up cache)
+  - uses arc ram (more for smaller blocks) to index
+** wireguard
+*** install
+- module added in kernel 5.6
+- add wireguard-tools package
+- use network manager for user in network group to add vpn w/o root
+  - ~nmcli connection import type wireguard file ./wg0.conf~
+  - ~nmcli connection up wg0~
+  - ~nmcli connection down wg0~
+- wg-quick for testing
+  - ~wg-quick up wg0~
+  - ~wg-quick down wg0~
+- systemd script
+  - ~systemctl start wg-quick\@wg0~
+  - systemd override with ~upnpc~ for nat plug n play behind router/firewalls
+    - ~systemctl edit wg-quick\@wg0~ creates
+      ~/etc/systemd/system/wg-quick\@wg0.service.d/override.conf~ with
+      - [Service]
+        ExecStartPost=/usr/bin/upnpc -e WireGuard -r 42069 UDP
+        ExecStopPost=/usr/bin/upnpc -d 42069 UDP
+- Config
+  - add forwarding rules in ~/etc/sysctl.d/90-override.conf~
+    - ~net.ipv4.ip_forward=1~
+    - ~net.ipv6.conf.all.forwarding=1~
+  - server config with eno1 as interface for forwarding rules
+    - [Interface]
+      PrivateKey = PRIVATEKEY1
+      Address = 10.0.0.1/24
+      ListenPort = 42069
+      PostUp = iptables -A FORWARD -i wg0 -j ACCEPT; iptables -t nat -A POSTROUTING -o eno1 -j MASQUERADE
+      PostDown = iptables -D FORWARD -i wg0 -j ACCEPT; iptables -t nat -D POSTROUTING -o eno1 -j MASQUERADE
+      [Peer] # laptop
+      PublicKey = PUBKEY2
+      PresharedKey = PSK2
+      AllowedIPs = 10.0.0.2/32
+      [Peer] # phone
+      PublicKey = PUBKEY3
+      PresharedKey = PSK3
+      AllowedIPs = 10.0.0.3/32
+  - client config
+    - [Interface]
+      PrivateKey = PRIVATEKEY3
+      Address = 10.0.0.3/32
+      #DNS = 10.0.0.1
+      [Peer] # server
+      PublicKey = PUBKEY3
+      PresharedKey = PSK3
+      AllowedIPs = 0.0.0.0/0, ::/0 # all traffic
+      Endpoint = 127.0.0.1:42069
+  - runs udp
+
+** ssh/webssh
+- enable sftp subsystem ~Subsystem sftp /sftp-server~
+- ~ssh-keygen -p~ for passphrase change
+- key only to ~cat key.pub >> $USER/authorized_hosts~
+  - ~PermitRootLogin no~
+  - ~PubkeyAuthentication yes~
+  - ~PasswordAuthentication no~
+  - ~ChallengeResponseAuthentication no~
+  - ~UsePAM no~ (may want yes depending on mount/decrypt setup)
+- tcp port forwarding with ~-L~
+** gpg
+- passphrase is last line
+- ~--expert --full-generate-key~ for new ecc key
+- ~--armor~ for ascii transferable key
+- can use email with for ID usually
+- extend expiration if not compromised
+- revocation if compromised
+- ~--export~ , ~--export-secret-key~ and ~--import~  for recovery (can also do it for trust store)
+- pass uses gpg with git commits (if already init'd)
+  - ~pass init email@stuff.com~ for loading gpg key
+  - ~pass add site/name~ with password
+  - ~-m~ for multiline
+  - can generate/update
+- ~pgp.mit.edu~ for keyserver that syncs with gpg and is known
+- ~hkps://keys.openpgp.org~ added support for cert spam
+- ~https://gitlab.com/openpgp-ca/openpgp-ca~ for new test ca
+- add as own signed commit in git branch for guix channel
+- ~gpg --edit-key XXXXX~ then ~trust~ and ~save~
+- encrypt ~gpg --encrypt --sign --armor -r a@email.com -r me@email.com~ and ~--sign-key~
+*** TODO investigate bip32 for reproducible keys
+*** TODO extend key expiration date :gpg:
+DEADLINE: <2026-05-08 -5d>
+** firefox
+- about:config
+  - esni.enabled true
+  - dns over https for 1.1.1.1
+  - network.trr.mode 2
+  - network.trr.uri
+    https://tor.cloudflare-dns.com/dns-query https://dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75euj35pac6ap25zgqad.onion/ (should be valid cert with alt-svc)
+  - check: https://www.cloudflare.com/ssl/encrypted-sni/
+  - dom.security.https_only_mode
+** guix
+- ~-L ./guix-channel~ to use local channel changes
+- installation can be done manually, script or relocatable pack with localstatedir
+  - ~guix pack -S /bin=bin -S /sbin=sbin --localstatedir -RR guix bash-static~
+- grafts can be used to patch to avoid rebuilds
+- substitutes can be used to use binary artifacts but able to challenge/rebuild with flag/changes
+- manifests contain group of packages that can be installed into a profile directory
+- packages can be manipulated through guile scheme and gexps
+- ~guix package --roll-back~ to drop to last version
+- commit signing and downgrading flags are ~--disable-authentication --allow-downgrades~
+- channels can be signed with gpg on channel branch with keys in ~.guix-authorizations~
+- non root guix can be done through a series of env variables and flags
+  - arg ~--listen=/socket~ and/or env var ~GUIX_DAEMON_SOCKET=$XDG_DATA_HOME/guix/var/guix/daemon-socket/socket~
+  - ~GUIX_DATABASE_DIRECTORY=$XDG_DATA_HOME/guix/var/guix/db~
+  - ~GUIX_LOG_DIRECTORY=$XDG_DATA_HOME/guix/var/log/guix~
+  - ~GUIX_STATE_DIRECTORY=$XDG_DATA_HOME/guix/var/guix~
+  - ~GUIX_CONFIGURATION_DIRECTORY=$XDG_CONFIG_HOME/guix/etc~
+  - ~GUIX_LOCPATH=$XDG_DATA_HOME/guix/var/guix/profiles/per-user/root/guix-profile/lib/locale~
+  - ~NIX_STORE=$XDG_DATA_HOME/guix/gnu/store~
+  - Add ~$XDG_DATA_HOME/guix/bin~ to ~$PATH~
+  - ~--disable-chroot~
+- default source for user is ~$HOME/.guix-profile/etc/profile~ and ~$XDG_CONFIG_HOME/guix/etc/profile~
+- ~-K~, ~edit~, ~repl~ and cli transformation options for testing
+- ~guix environment~ for build environment for packages using network/containers/env isolation
+- cleanup space with ~guix package -d && guix pull -d && guix gc~
+- can export packages with pack as tar.gz/docker
+- os templates for qemu images with ~guix system image -t qcow2 --save-provenance~
+  - ~qemu-system-x86_64 -nic user,model=virtio-net-pci -enable-kvm -m 1024 -device virtio-blk,drive=myhd -drive if=none,file=$MY_IMAGE,id=myhd~
+- in os definition ~kernel-loadable-modules~ and service ~kernel-module-loader-service-type~
+- ~guix deploy~ for cloud/ssh admin
+- ~guix import~ for template importers for pypi,rubygems,cargo etc.
+- ~guix hash -xr .~ for the checksum of a repo
+- can ~publish~ substitutes after exporting/importing key with ~archive~ or use nars with ~guix archive --export -r~
+- lint for packages
+*** shepherd
+- started with ~shepherd~ and stopped with ~herd stop root~
+- guix's systemd replacement.
+- user services at ~$XDG_CONFIG_HOME/shepherd/init.scm~
+
+** tor
+- socks5 on 9050 by default
+- onionv3 is e2e encrypted
+- browser bundle runs 9051 by default
+- ~vanguard~ contemporary protections
+- obfs4 bridge if blocked
+- hostname/priv/public key in service dir
+- orbot for android
+- torsocks for torify apps like ssh
+- onion services are tcp with nat punching
+- https://3g2upl4pq6kufc4m.onion/ is ddg v2
+- https://protonirockerxow.onion/ is protonmail v2
+- https://dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75euj35pac6ap25zgqad.onion/ is cloudflare 1.1.1.1
+- digicert offers ev wildcard certs for .onion
+- tcp 9001 for relay default without bridge
+** git
+- can update .git/config and submodules configs but should use porcelain
+- --depth implies single-branch thus refspec will be on single branch
+  - ~git config remote.origin.fetch +refs/heads/*:refs/remotes/origin/*~
+  - ~git fetch --depth=1 origin +refs/heads/*:refs/remotes/origin/*~
+  - ~git fetch origin feature/branch --depth=1 && git checkout -b feature/branch FETCH_HEAD~
+- bundle to offline move repos
+** termux
+ - apt based package manager
+ - vol up/down and a/d to move left/right (other shortcuts too)
+ - vol up long and Q for special keyboard
+** ntp
+- ~ntpdate -s time.nist.gov~ sync from time server
+- port 123
+** emacs
+- pgtk for pure gtk branch (wayland)
+- edebug and space for jump (? for into)
+- lsp and dap for language and debugging languages
+- early-init.el is before gui/tty
+- ~-Q~ for no site/init file and ~-nw~ for term
+- doom emacs
+  - uses straight.el for packages
+  - evil bindings for vim ppl
+  - compiles byte/native for all packages
+  - uses gmch for garbage collector startup
+  - modules for preconfigured packages
+  - uses macros to defer
+  - autoloads into single file
+*** TODO update completion from ivy to selectrum/vertico for inbuilt emacs extension
+** gufw/ufw/iptables/nftables
+- gufw is a gui for ufw which manages iptable chains
+  - accepts all localhost in ufw-before-input so it can't be blocked in the INPUT chain
+- replaced by nftables
+- local port map
+  - 1900 udp for ssdp
+  - 5350 udp for pcp
+  - 5351 udp for nat-pmp
+- private networks (/32 is all and /24 is all but last octet)
+  - 192.168.x.x/16 is class C
+  - 10.x.x.x/8 is class A
+  - 172.16.x.x/12 is class B
+- ~curl https://checkip.amazonaws.com~ for cli for checking ip
+- nfsv4 is tcp 2049
+** kubernetes
+- CNI for network
+- CRI for runtime
+- static pod kubelet config for single service testing
+- kubeadm for setup
+- cncf for compat
+** truck
+- keyfob nfc is under front cupholder (incase keyfob is dead)
+- manual in automatic if right paddle
+- bottom two outside buttons lock while key inside
+- alarm when turning off for motion sensor as perimeter only
+** cryptocurrency
+*** chia
+- k=32 smallest mainnet ~101 GB used and 200 tmp
+- plots can be made offline and moved
+- TCP 8444 using upnpc
+*** nkn
+- cellular automata consensus
+- need 10 to start mining as a 'relay'
+*** iota
+- dag for concensus
+- centralized atm
+** gnunet
+- gns for dns as .gnu
+  - uses keys for zones and multiple record types
+  - supports legacy dns
+- ftp has anonymous level setting
+- multiple components that can run different parts of the network

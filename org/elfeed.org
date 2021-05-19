@@ -24,10 +24,13 @@
 **** https://matrix.org/blog/feed
 *** Qemu :vm:
 **** https://github.com/qemu/qemu/releases.atom
+*** ZFS :fs:
+**** https://www.youtube.com/feeds/videos.xml?channel_id=UC0IK6Y4Go2KtRueHDiQcxow :vid:
+**** https://github.com/openzfs/zfs/releases.atom
 ** News :news:
 **** politics
 ***** videos :vid:
-****** www.youtube.com/feeds/videos.xml?channel_id=UCe02lGcO-ahAURWuxAJnjdA
+****** https://www.youtube.com/feeds/videos.xml?channel_id=UCe02lGcO-ahAURWuxAJnjdA
 ****** https://www.bitchute.com/feeds/rss/channel/Styxhexenhammer666
 ***** reddit :reddit:
 ****** http://www.reddit.com/r/news/.rss
