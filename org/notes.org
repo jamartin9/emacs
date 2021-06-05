@@ -43,6 +43,11 @@ quick notes for myself
 - mask with ~systemctl mask swap.target~
 **** timers
 - execution of units on timer to replace cron
+*** timedatectl
+- sytemd-timesyncd control
+- client only and runs only when networkd
+- timedatectl set-ntp true
+- set-local-rtc to set hardware clock to localtime instead of UTC
 *** udev rules
 - devices rules for joysticks/zfs of how to label/map/access
 - eudev is systemd free and maintained by gentoo
@@ -194,7 +199,7 @@ quick notes for myself
 - add as own signed commit in git branch for guix channel
 - ~gpg --edit-key XXXXX~ then ~trust~ and ~save~
 - encrypt ~gpg --encrypt --sign --armor -r a@email.com -r me@email.com~ and ~--sign-key~
-*** TODO investigate bip32 for reproducible keys
+*** TODO investigate bip for reproducible keys
 *** TODO extend key expiration date :gpg:
 DEADLINE: <2026-05-08 -5d>
 ** firefox
@@ -255,7 +260,7 @@ DEADLINE: <2026-05-08 -5d>
 - orbot for android
 - torsocks for torify apps like ssh
 - onion services are tcp with nat punching
-- https://3g2upl4pq6kufc4m.onion/ is ddg v2
+- https://duckduckgogg42xjoc72x3sjasowoarfbgcmvfimaftt6twagswzczad.onion/html is ddg
 - https://protonirockerxow.onion/ is protonmail v2
 - https://dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75euj35pac6ap25zgqad.onion/ is cloudflare 1.1.1.1
 - digicert offers ev wildcard certs for .onion
@@ -274,8 +279,13 @@ DEADLINE: <2026-05-08 -5d>
 ** ntp
 - ~ntpdate -s time.nist.gov~ sync from time server
 - port 123
+- can hook to network manager for running only when connected
+- ntpd for daemon and ntpdate for on boot
+- update hardware clock ~/etc/systemd/system/ntpdate.service.d/hwclock.conf~
+  - [Service]
+  - ExecStart=/usr/bin/hwclock -w
 ** emacs
-- pgtk for pure gtk branch (wayland)
+- pgtk for pure gtk branch (wayland/broadway)
 - edebug and space for jump (? for into)
 - lsp and dap for language and debugging languages
 - early-init.el is before gui/tty
@@ -301,30 +311,15 @@ DEADLINE: <2026-05-08 -5d>
   - 192.168.x.x/16 is class C
   - 10.x.x.x/8 is class A
   - 172.16.x.x/12 is class B
-- ~curl https://checkip.amazonaws.com~ for cli for checking ip
+- ~curl https://checkip.amazonaws.com~ for cli for checking ip or ~upnpc -s | grep ExternalIPAddress~
 - nfsv4 is tcp 2049
+- use xdp and ebpf for faster firewalls
 ** kubernetes
 - CNI for network
 - CRI for runtime
 - static pod kubelet config for single service testing
 - kubeadm for setup
 - cncf for compat
-** truck
-- keyfob nfc is under front cupholder (incase keyfob is dead)
-- manual in automatic if right paddle
-- bottom two outside buttons lock while key inside
-- alarm when turning off for motion sensor as perimeter only
-** cryptocurrency
-*** chia
-- k=32 smallest mainnet ~101 GB used and 200 tmp
-- plots can be made offline and moved
-- TCP 8444 using upnpc
-*** nkn
-- cellular automata consensus
-- need 10 to start mining as a 'relay'
-*** iota
-- dag for concensus
-- centralized atm
 ** gnunet
 - gns for dns as .gnu
   - uses keys for zones and multiple record types

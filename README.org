@@ -55,7 +55,7 @@ update from the remotes and then our forks.
 #+BEGIN_SRC makefile :tangle no
 update:
 	git submodule update --recursive --remote
-	git -C doom-emacs remote add upstream https://github.com/hlissner/doom-emacs.git || true
+	git -C doom-emacs remote add upstream https://github.com/hlissner/doom-emacs.git || :
 	git -C doom-emacs fetch --all
 	git -C doom-emacs merge upstream/develop # update-doom-emacs
 	./doom-emacs/bin/doom sync -upe # update-packages

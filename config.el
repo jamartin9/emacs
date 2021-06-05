@@ -3,9 +3,8 @@
 (setq user-full-name "Justin Martin"
       user-mail-address "jaming@protonmail.com")
 
-(setq doom-font (font-spec :family "monospace" :size 21))
-
-(setq doom-theme 'doom-one)
+;(setq doom-font (font-spec :family "monospace" :size 21))
+;(setq doom-theme 'doom-one)
 
 (setq org-directory (concat (expand-file-name doom-private-dir) (file-name-as-directory "org")))
 
@@ -55,6 +54,9 @@
 
 (use-package! system-packages
   :commands system-packages-ensure)
+
+(use-package! nano-theme
+  :config (nano-dark))
 
 ;;; Setup my stuff
 (jam/init)

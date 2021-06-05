@@ -7,7 +7,7 @@
        (ivy +fuzzy)               ; a search engine for love and life
 
        :ui
-       doom              ; what makes DOOM look the way it does
+       ;doom              ; what makes DOOM look the way it does
        (modeline +light)          ; snazzy, Atom-inspired modeline, plus API
        (window-select +switch-window +numbers)     ; visually switch windows
        (popup +defaults)   ; tame sudden yet inevitable temporary windows

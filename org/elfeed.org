@@ -1,5 +1,7 @@
 * Feeds :elfeed:
 ** Software Development :dev:
+*** Chia :crypto:
+**** https://github.com/Chia-Network/chia-blockchain/releases.atom
 *** Guile :lisp:
 **** https://www.gnu.org/software/guile/news/feed.xml
 *** Guix :packages:
@@ -12,6 +14,7 @@
 *** Emacs :emacs:mustread:
 **** https://savannah.gnu.org/news/atom.php?group=emacs
 **** https://github.com/hlissner/doom-emacs/commits/develop.atom
+**** https://github.com/emacs-mirror/emacs/commits/feature/pgtk.atom
 *** Transmission :torrent:
 **** https://github.com/transmission/transmission/releases.atom
 *** Searx :search:
@@ -40,7 +43,4 @@
 ***** CVE :cve:
 ****** https://nvd.nist.gov/feeds/xml/cve/misc/nvd-rss-analyzed.xml
 ** Blogs :blogs:
-**** Cryptography
-**** Security
-***** https://www.schneier.com/feed/atom
-**** Research
+*** https://www.schneier.com/feed/atom
