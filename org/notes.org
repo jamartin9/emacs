@@ -1,13 +1,4 @@
 * Notes
-quick notes for myself
-** avahi
-- local network discovery
-- port 5353 tcp/udp
-** xorg
-- mostly obe for wayland (minus nvidia drivers)
-- ttys if it locks up (ctrl+alt+f1-f6 & f7)
-- load nvidia module
-- ~/.Xmodmap has ~add mod3 = Scroll_Lock~ for led on scroll_lock
 ** grub
 - rescue shell set for /dev/sda5
   - prefix=(hd0,5)/boot/grub
@@ -17,8 +8,6 @@ quick notes for myself
   - initrd (hd0,6)/boot/initramfs-linux.img
   - boot
 - single user mode on boot by adding single to the linux kernel line
-** pam
-- custom module configurations for authentication at various points
 ** systemd
 *** bootctl
 - efi boot manager for stub kernel
@@ -54,6 +43,16 @@ quick notes for myself
 *** logind
 - login manager
 - gentoo maintains systemd free version
+*** polkit/rtkit/udisks
+- uses client lib/dbus to config special permissions for user access to network/mounts etc
+*** keyctl
+- management of keys
+*** NetworkManager
+   - ~/usr/lib/NetworkManager/conf.d/20-connectivity.conf~ pings out
+     - ~/etc/NetworkManager/conf.d/20-connectivity.conf~
+     - [connectivity]
+     - uri=http://ping.manjaro.org/check_network_status.txt interval=0
+     - enabled=false
 *** misc
 - ~systemd-analyze --blame~ for boot times
 - user level service units in home dir
@@ -62,8 +61,6 @@ quick notes for myself
 - can manage containers/cgroups
 - auto/mount units are made from /etc/fstab
 - swap units and device units are needed for management
-** polkit/rtkit/udisks
-- uses client lib/dbus to config special permissions for user access to network/mounts etc
 ** zfs
 *** install
 - If given whole disk zfs will leave small partition at begin/end and mark it with a wholedisk property.
@@ -74,8 +71,7 @@ quick notes for myself
   Partitions are still useful for getting more from the pool hardware.
   The elevator/scheduler module option was removed from zfs after 4.12 kernel. udev rules should set the scheduler
   on Linux for the IO elevator be none/noop and use zfs's internal one when given whole disks to reduce cpu.
-- add kernel module package (lic issues but ubuntu doesnt care)
-- add to initramfs via mkinitcpio/dracut
+- add to kmod to initramfs via mkinitcpio/dracut
   - ex. add zfs to HOOKS in ~/etc/defaults/mkinitcpio.conf~
   - regen initramfs ~mkinitcpio -P~
 - update-grub with zfs root (if on root)
@@ -105,15 +101,15 @@ quick notes for myself
   - Mounting, keys, snapshots, rollbacks are done via ~zfs~
 *** notes
 - If you lose a vdev in a pool you LOSE THE POOL
-- Autoexpand allows the 'safe' thing of smallest partition that can grow.
-  - Manual config can get more with same redundancy if planned correctly
+- Autoexpand allows the 'safe' thing of smallest partition that can grow. wip raidz expand pool size.
+  - Manual pool config can get more out of smaller disks with the same redundancy
 - When expanding rebalancing is not done leaving potentially higher resilver times in the future increasing the chance of cascading failure.
   - snapshot, make tmp dataset, send | recv to new dataset to redistribute blocks, destroy old snapshot, rename dataset
 - Sparse files can be useful for testing/migrating setups if the enough storage is actually present(piecemeal the datasets)
 - enable compression and relatime for normal timestamps
 - SLOG requires devices that will write data on power loss...
 - SPECIAL vdevs store metadata (good for ssd) but need redundancy as they can take the pool down
-- Spare drive is mostly to help resilver time (zed auto replace) but draid seems more comprehensive
+- How spare drive is mostly to help resilver time (zed auto replace)
 - Single device zfs can use the COPIES attribute to help redundancy
 - /tmp sync off
 - enable sharing on dataset for nfs
@@ -123,7 +119,6 @@ quick notes for myself
 ** wireguard
 *** install
 - module added in kernel 5.6
-- add wireguard-tools package
 - use network manager for user in network group to add vpn w/o root
   - ~nmcli connection import type wireguard file ./wg0.conf~
   - ~nmcli connection up wg0~
@@ -171,7 +166,7 @@ quick notes for myself
   - runs udp
 
 ** ssh/webssh
-- enable sftp subsystem ~Subsystem sftp /sftp-server~
+- sftp subsystem ~Subsystem sftp /sftp-server~
 - ~ssh-keygen -p~ for passphrase change
 - key only to ~cat key.pub >> $USER/authorized_hosts~
   - ~PermitRootLogin no~
@@ -181,31 +176,30 @@ quick notes for myself
   - ~UsePAM no~ (may want yes depending on mount/decrypt setup)
 - tcp port forwarding with ~-L~
 ** gpg
-- passphrase is last line
 - ~--expert --full-generate-key~ for new ecc key
 - ~--armor~ for ascii transferable key
-- can use email with for ID usually
-- extend expiration if not compromised
-- revocation if compromised
 - ~--export~ , ~--export-secret-key~ and ~--import~  for recovery (can also do it for trust store)
 - pass uses gpg with git commits (if already init'd)
   - ~pass init email@stuff.com~ for loading gpg key
   - ~pass add site/name~ with password
   - ~-m~ for multiline
-  - can generate/update
+  - ~pass generate -n site/user size~
 - ~pgp.mit.edu~ for keyserver that syncs with gpg and is known
 - ~hkps://keys.openpgp.org~ added support for cert spam
 - ~https://gitlab.com/openpgp-ca/openpgp-ca~ for new test ca
 - add as own signed commit in git branch for guix channel
 - ~gpg --edit-key XXXXX~ then ~trust~ and ~save~
 - encrypt ~gpg --encrypt --sign --armor -r a@email.com -r me@email.com~ and ~--sign-key~
-*** TODO investigate bip for reproducible keys
+*** TODO investigate bip/mnemonics reproducible keys
 *** TODO extend key expiration date :gpg:
 DEADLINE: <2026-05-08 -5d>
 ** firefox
 - about:config
   - esni.enabled true
-  - dns over https for 1.1.1.1
+    - esni is replaced by ech but not all servers support it
+    - network.dns.echconfig.enabled
+    - network.dns.use_https_rr_as_altsvc
+  - dns over https for 1.1.1.1 1.0.0.1
   - network.trr.mode 2
   - network.trr.uri
     https://tor.cloudflare-dns.com/dns-query https://dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75euj35pac6ap25zgqad.onion/ (should be valid cert with alt-svc)
@@ -218,7 +212,6 @@ DEADLINE: <2026-05-08 -5d>
 - grafts can be used to patch to avoid rebuilds
 - substitutes can be used to use binary artifacts but able to challenge/rebuild with flag/changes
 - manifests contain group of packages that can be installed into a profile directory
-- packages can be manipulated through guile scheme and gexps
 - ~guix package --roll-back~ to drop to last version
 - commit signing and downgrading flags are ~--disable-authentication --allow-downgrades~
 - channels can be signed with gpg on channel branch with keys in ~.guix-authorizations~
@@ -243,28 +236,23 @@ DEADLINE: <2026-05-08 -5d>
 - ~guix deploy~ for cloud/ssh admin
 - ~guix import~ for template importers for pypi,rubygems,cargo etc.
 - ~guix hash -xr .~ for the checksum of a repo
-- can ~publish~ substitutes after exporting/importing key with ~archive~ or use nars with ~guix archive --export -r~
-- lint for packages
-*** shepherd
+- ~guix publish~ substitutes after exporting/importing key with ~guix archive~ or use nars with ~guix archive --export -r~
+- ~guix lint~ for packages
+** shepherd
 - started with ~shepherd~ and stopped with ~herd stop root~
-- guix's systemd replacement.
 - user services at ~$XDG_CONFIG_HOME/shepherd/init.scm~
-
 ** tor
 - socks5 on 9050 by default
-- onionv3 is e2e encrypted
 - browser bundle runs 9051 by default
-- ~vanguard~ contemporary protections
-- obfs4 bridge if blocked
-- hostname/priv/public key in service dir
 - orbot for android
 - torsocks for torify apps like ssh
-- onion services are tcp with nat punching
+- onion services are tcp with outbound nat punching
 - https://duckduckgogg42xjoc72x3sjasowoarfbgcmvfimaftt6twagswzczad.onion/html is ddg
 - https://protonirockerxow.onion/ is protonmail v2
 - https://dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75euj35pac6ap25zgqad.onion/ is cloudflare 1.1.1.1
 - digicert offers ev wildcard certs for .onion
 - tcp 9001 for relay default without bridge
+- set ~DNSPort 127.0.10.1:53~ and set pihole upstream for toring pihole connections without torsocks
 ** git
 - can update .git/config and submodules configs but should use porcelain
 - --depth implies single-branch thus refspec will be on single branch
@@ -273,56 +261,43 @@ DEADLINE: <2026-05-08 -5d>
   - ~git fetch origin feature/branch --depth=1 && git checkout -b feature/branch FETCH_HEAD~
 - bundle to offline move repos
 ** termux
- - apt based package manager
  - vol up/down and a/d to move left/right (other shortcuts too)
  - vol up long and Q for special keyboard
 ** ntp
-- ~ntpdate -s time.nist.gov~ sync from time server
 - port 123
-- can hook to network manager for running only when connected
-- ntpd for daemon and ntpdate for on boot
-- update hardware clock ~/etc/systemd/system/ntpdate.service.d/hwclock.conf~
-  - [Service]
-  - ExecStart=/usr/bin/hwclock -w
+- ~ntpd~ for persistence and ~ntpdate -s time.nist.gov~ for on demand
+- ~/usr/bin/hwclock -w~ update hardware clock in ~/etc/systemd/system/ntpdate.service.d/hwclock.conf~
 ** emacs
-- pgtk for pure gtk branch (wayland/broadway)
-- edebug and space for jump (? for into)
-- lsp and dap for language and debugging languages
-- early-init.el is before gui/tty
+  - broadwayd port 8080 with apps env var GDK_BACKEND=broadway
+- ~edebug~ space is jump, ~?~ is intro.
+- ~early-init.el~ is before gui/tty
 - ~-Q~ for no site/init file and ~-nw~ for term
-- doom emacs
-  - uses straight.el for packages
-  - evil bindings for vim ppl
-  - compiles byte/native for all packages
-  - uses gmch for garbage collector startup
-  - modules for preconfigured packages
-  - uses macros to defer
-  - autoloads into single file
 *** TODO update completion from ivy to selectrum/vertico for inbuilt emacs extension
-** gufw/ufw/iptables/nftables
+** gufw/ufw/iptables/nftables/opensnitch
 - gufw is a gui for ufw which manages iptable chains
-  - accepts all localhost in ufw-before-input so it can't be blocked in the INPUT chain
-- replaced by nftables
+  - ufw accepts all localhost in ufw-before-input (so it can't be blocked in the INPUT chain)
+- iptables replaced by nftables
 - local port map
   - 1900 udp for ssdp
   - 5350 udp for pcp
   - 5351 udp for nat-pmp
 - private networks (/32 is all and /24 is all but last octet)
-  - 192.168.x.x/16 is class C
   - 10.x.x.x/8 is class A
   - 172.16.x.x/12 is class B
+  - 192.168.x.x/16 is class C
+  - 127.x.x.x/8 is localhost
 - ~curl https://checkip.amazonaws.com~ for cli for checking ip or ~upnpc -s | grep ExternalIPAddress~
-- nfsv4 is tcp 2049
-- use xdp and ebpf for faster firewalls
+- opensnitchd daemon for ebpf app filtering
+*** TODO opensnitch wip on incoming connections with ip/nf tables
 ** kubernetes
-- CNI for network
-- CRI for runtime
 - static pod kubelet config for single service testing
 - kubeadm for setup
-- cncf for compat
-** gnunet
-- gns for dns as .gnu
-  - uses keys for zones and multiple record types
-  - supports legacy dns
-- ftp has anonymous level setting
-- multiple components that can run different parts of the network
+** postgresql
+- jit --with-llvm
+- update with logical replication and pg_balancer or pg_upgrade
+** netdata
+- default port 19999
+- PKGBUILD edits for ebpf
+  - +  ~./packaging/bundle-ebpf.sh "$PWD" "${pkgdir}/usr/lib/netdata/plugins.d/"~ in package
+  - +  ~./packaging/bundle-libbpf.sh "$PWD"~ in build
+- setuid on ebpf plugin until reduced capabilites are supported ~sudo chmod 4750 /usr/lib/netdata/plugins.d/ebpf.plugin~

@@ -110,6 +110,7 @@
    ;;"wireguard-tools"
    ;;"torsocks"
    ;;"socat"
+   ;;"nss-certs"
 
    ;; Desktop
    ;;"xfce"; --with-graft=mesa=nvda

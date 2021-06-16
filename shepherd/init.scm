@@ -61,7 +61,7 @@
 
  (make <service>
    #:provides '(searx)
-   #:requires '(vanguards
+   #:requires '(;vanguards
                 tor)
    #:start (make-forkexec-constructor
              `("searx-run")
@@ -82,9 +82,9 @@
 
 (action 'shepherd 'daemonize)
 (for-each start '(
-                  vanguards
-                  tor
-                  ;emacs
+                  ;vanguards
+                  ;tor
+                  emacs
                   ;guix-daemon
                   ;searx
                   ))

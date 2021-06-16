@@ -57,11 +57,11 @@
        emacs-lisp        ; drown in parentheses
        (org +gnuplot)               ; organize your plain life in plain text
        (scheme +guile)            ; a fully conniving family of lisps
-       (clojure +lsp)           ; java with a lisp
        (cc +lsp)               ; C/C++/Obj-C madness
-       ;;(zig +lsp)
-       ;;(sh +lsp)                ; she sells {ba,z,fi}sh shells on the C xor
+       (zig +lsp)
+       ;;(clojure +lsp)           ; java with a lisp
        ;;(julia +lsp)             ; a better, faster MATLAB
+       ;;(sh +lsp)                ; she sells {ba,z,fi}sh shells on the C xor
        ;;(rust +lsp)              ; Fe2O3.unwrap().unwrap().unwrap().unwrap()
        ;;(python +lsp)            ; beautiful is better than ugly
        ;;(web +lsp)               ; the tubes

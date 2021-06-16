@@ -2,6 +2,7 @@
 ** Software Development :dev:
 *** Chia :crypto:
 **** https://github.com/Chia-Network/chia-blockchain/releases.atom
+**** https://www.youtube.com/feeds/videos.xml?channel_id=UChFkJ3OAUvnHZdiQISWdWPA :vid:
 *** Guile :lisp:
 **** https://www.gnu.org/software/guile/news/feed.xml
 *** Guix :packages:

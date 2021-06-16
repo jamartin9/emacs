@@ -4,11 +4,12 @@
 
 ;;;###autoload
 (defun jam/set-env ()
-  "Sets commmonly used environment variables"
+  "Sets commonly used environment variables"
   (interactive)
   (setenv "XDG_CONFIG_HOME" (concat (file-name-as-directory (getenv "HOME")) ".config"))
   (setenv "XDG_CACHE_HOME" (concat (file-name-as-directory (getenv "HOME")) ".cache"))
   (setenv "XDG_DATA_HOME" (concat (file-name-as-directory (getenv "HOME")) (file-name-as-directory ".local") "share"))
+  (setenv "XDG_STATE_HOME" (concat (file-name-as-directory (getenv "HOME")) (file-name-as-directory ".local") "state"))
 
   (setenv "PATH" (concat (getenv "PATH") ; add bin dirs to path
                          ":" (concat (file-name-as-directory (getenv "HOME")) (file-name-as-directory ".local") "bin")
@@ -16,16 +17,14 @@
                          ":" (concat (file-name-as-directory (getenv "HOME")) (file-name-as-directory ".npm-packages") "bin")
                          ":" (concat (file-name-as-directory (getenv "HOME")) (file-name-as-directory "go") "bin")
                          ":" (concat (file-name-as-directory (getenv "XDG_CONFIG_HOME")) (file-name-as-directory "doom") (file-name-as-directory "doom-emacs") "bin")
-                         ))
-  ;;(setenv "JAVA_TOOL_OPTIONS" "-XX:+PrintFlagsFinal -XX:+UnlockDiagnosticVMOptions -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCI -XX:+UseJVMCICompiler -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=heapdump.hprof -XX:StartFlightRecording=disk=true,dumponexit=true,filename=recording.jfr,maxsize=1024m,maxage=1d,settings=profile,path-to-gc-roots=true -Xlog:gc:gc.log:utctime,uptime,tid,level:filecount=10,filesize=128m -XX:NativeMemoryTracking=detail -XX:+PreserveFramePointer")
-  )
+                         )))
 
 ;;; system packages
 
 ;;;###autoload
 (defun jam/syspkgs-install ()
   (interactive)
-  (let ((pkglist (list "expac" "sudo" "bash" "veracrypt" "ufw" "gufw" "signal-desktop" "torbrowser-launcher")) ;; expac is needed for syspkgs -_-
+  (let ((pkglist (list "expac" "sudo" "bash" "veracrypt" "ufw" "gufw" "signal-desktop" "torbrowser-launcher" "opensnitch-git" "pi-hole-server")) ;; expac is needed for syspkgs -_-
         (system-packages-use-sudo t)
         (system-packages-package-manager 'pacman)) ;; "steam-devices" "python-pip"
     ;;(use-package use-package-ensure-system-package
