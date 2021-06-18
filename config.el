@@ -56,7 +56,10 @@
   :commands system-packages-ensure)
 
 (use-package! nano-theme
-  :config (nano-dark))
+  :init (add-hook (if (daemonp)
+                      'after-make-frame-functions
+                    'doom-after-init-modules-hook)
+                  #'nano-dark))
 
 ;;; Setup my stuff
 (jam/init)
