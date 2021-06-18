@@ -59,7 +59,11 @@
   :init (add-hook (if (daemonp)
                       'after-make-frame-functions
                     'doom-after-init-modules-hook)
-                  #'nano-dark))
+                  #'(lambda (&optional frame)
+                        (with-selected-frame (or frame (selected-frame))
+                         (message "loaded for frame %s" frame)
+                         (nano-dark))
+                      )))
 
 ;;; Setup my stuff
 (jam/init)
