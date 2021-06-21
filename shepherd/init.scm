@@ -83,8 +83,8 @@
 (action 'shepherd 'daemonize)
 (for-each start '(
                   ;vanguards
-                  ;tor
-                  emacs
+                  tor
+                  ;emacs
                   ;guix-daemon
                   ;searx
                   ))

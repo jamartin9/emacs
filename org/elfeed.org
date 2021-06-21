@@ -3,7 +3,7 @@
 *** Chia :crypto:
 **** https://github.com/Chia-Network/chia-blockchain/releases.atom
 **** https://www.youtube.com/feeds/videos.xml?channel_id=UChFkJ3OAUvnHZdiQISWdWPA :vid:
-*** Guile :lisp:
+*** Guile :lisp:scheme:
 **** https://www.gnu.org/software/guile/news/feed.xml
 *** Guix :packages:
 **** https://guix.gnu.org/feeds/blog.atom
@@ -12,7 +12,7 @@
 *** Linux :linux:
 **** https://lwn.net/headlines/newrss
 **** https://www.kernel.org/feeds/kdist.xml
-*** Emacs :emacs:mustread:
+*** Emacs :emacs:
 **** https://savannah.gnu.org/news/atom.php?group=emacs
 **** https://github.com/hlissner/doom-emacs/commits/develop.atom
 **** https://github.com/emacs-mirror/emacs/commits/feature/pgtk.atom

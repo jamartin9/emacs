@@ -1,7 +1,5 @@
 ;;; $DOOMDIR/autoload.el -*- lexical-binding: t; -*-
 
-;;; set user-env
-
 ;;;###autoload
 (defun jam/set-env ()
   "Sets commonly used environment variables"
@@ -19,10 +17,9 @@
                          ":" (concat (file-name-as-directory (getenv "XDG_CONFIG_HOME")) (file-name-as-directory "doom") (file-name-as-directory "doom-emacs") "bin")
                          )))
 
-;;; system packages
-
 ;;;###autoload
 (defun jam/syspkgs-install ()
+  "Installs several packages"
   (interactive)
   (let ((pkglist (list "expac" "sudo" "bash" "veracrypt" "ufw" "gufw" "signal-desktop" "torbrowser-launcher" "opensnitch-git" "pi-hole-server")) ;; expac is needed for syspkgs -_-
         (system-packages-use-sudo t)
@@ -36,39 +33,8 @@
 ;;; GUIX
 
 ;;;###autoload
-(defun jam/guix-source (filename)
-  "Update environment variables from a shell source file."
-  (interactive "s")
-  (message "Sourcing environment from `%s'..."
-           filename)
-  (with-temp-buffer
-    (shell-command (format "diff -u <(true; export) <(source %s; export)"
-                           filename)
-                   '(4))
-    (let ((envvar-re "declare -x \\([^=]+\\)=\\(.*\\)$"))
-      ;; Remove environment variables
-      (while (search-forward-regexp (concat "^-" envvar-re)
-                                    nil
-                                    t)
-        (let ((var (match-string 1)))
-          (message "%s"
-                   (prin1-to-string `(setenv ,var nil)))
-          (setenv var nil)))
-      ;; Update environment variables
-      (goto-char (point-min))
-      (while (search-forward-regexp (concat "^+" envvar-re)
-                                    nil
-                                    t)
-        (let ((var (match-string 1))
-              (value (read (match-string 2))))
-          (message "%s"
-                   (prin1-to-string `(setenv ,var ,value)))
-          (setenv var value)))))
-  (message "Sourcing environment from `%s'... done."
-           filename))
-
-;;;###autoload
 (defun jam/guix-env()
+  "Guix variables for local guix daemon/client"
   (interactive)
   (setenv "GUIX_DAEMON_SOCKET" (concat (file-name-as-directory (getenv "XDG_DATA_HOME"))
                                        (file-name-as-directory "guix")
@@ -107,26 +73,30 @@
 
 ;;;###autoload
 (defun jam/guix-default-profile ()
+  "needs a working guile and guix on the PATH.
+   both should be provided via the bootstrap guix/emacs package/tarball
+   detect emacs from guix vs current and relaunch when daemonp"
   (interactive)
-  (jam/guix-source (concat (file-name-as-directory (getenv "HOME"))
+  (guix-set-emacs-environment (concat (file-name-as-directory (getenv "HOME"))
                            (file-name-as-directory ".guix-profile")
                            (file-name-as-directory "etc")
                            "profile"))
-  (jam/guix-source (concat (file-name-as-directory (getenv "XDG_CONFIG_HOME"))
+  (guix-set-emacs-environment (concat (file-name-as-directory (getenv "XDG_CONFIG_HOME"))
                            (file-name-as-directory "guix")
                            (file-name-as-directory "etc")
-                           "profile")))
+                           "profile"))
+  ;(guix-set-current-profile)
+  ;(guix-apply-manifest )
+  )
 
 ;;; Main
-
 ;;;###autoload
 (defun jam/init ()
   "Runs my stuff"
   (interactive)
-  ;; Copy-cut-paste-undo
-  (cua-mode t)
-  (jam/set-env)
-  ;;(jam/guix-env)
+  (cua-mode t);; copy-cut-paste-undo
+  (jam/set-env);; set user-env
+  ;;(jam/guix-env);; set default guix profiles and our own manifest
   ;;(jam/guix-default-profile)
-  ;;(jam/syspkgs-install)
+  ;;(jam/syspkgs-install);; system packages
  )

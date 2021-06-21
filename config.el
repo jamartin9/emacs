@@ -3,15 +3,13 @@
 (setq user-full-name "Justin Martin"
       user-mail-address "jaming@protonmail.com")
 
-;(setq doom-font (font-spec :family "monospace" :size 21))
-;(setq doom-theme 'doom-one)
+(setq doom-font (font-spec :family "monospace" :size 21))
+(setq doom-theme 'doom-one)
 
 (setq org-directory (concat (expand-file-name doom-private-dir) (file-name-as-directory "org")))
 
 (setq display-line-numbers-type t)
-
 (setq column-number-mode t)
-
 (setq xterm-mouse-mode t)
 
 ;;; Package configs
@@ -55,17 +53,6 @@
 (use-package! system-packages
   :commands system-packages-ensure)
 
-(use-package! nano-theme
-  :init (add-hook (if (daemonp)
-                      'after-make-frame-functions
-                    'doom-after-init-modules-hook)
-                  #'(lambda (&optional frame)
-                        (with-selected-frame (or frame (selected-frame))
-                         (message "loaded for frame %s" frame)
-                         (nano-dark))
-                      )))
-
-;;; Setup my stuff
-(jam/init)
+(jam/init);; Setup my stuff
 (doom-display-benchmark-h 'return)
 ;;(all-the-icons-install-fonts)

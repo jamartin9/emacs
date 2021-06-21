@@ -175,3 +175,10 @@ _guix_opts(){
     done
 }
 alias guixProf=_guix_opts
+
+_emacs_wrap(){
+    # create frame, daemon and pass args
+    emacsclient -c -a "" $@
+}
+alias emacsc="_emacs_wrap"
+alias emacskill="_emacs_wrap -e '(kill-emacs)'"

@@ -3,12 +3,12 @@
  '(
    ;; basic
    "emacs-pgtk-native-comp"
-   ;;"git"
-   "guix"
-   "guile"
+   ;"git"
+   ;"guix"
+   ;"guile"
    "shepherd"
    "glibc-utf8-locales"
-   ;;"tor"
+   "tor"
    "python-searx"
    "python-vanguards-git"
    ;;"ungoogled-chromium-nvda"
