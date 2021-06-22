@@ -11,7 +11,7 @@
        (modeline +light)          ; snazzy, Atom-inspired modeline, plus API
        (window-select +switch-window +numbers)     ; visually switch windows
        (popup +defaults)   ; tame sudden yet inevitable temporary windows
-       ;;doom-dashboard    ; a nifty splash screen for Emacs
+       doom-dashboard    ; a nifty splash screen for Emacs
        ;;treemacs          ; a project drawer, like neotree but cooler
        ;;tabs              ; an tab bar for Emacs
        ;;workspaces        ; tab emulation, persistence & separate workspaces
@@ -32,9 +32,9 @@
        ;;(ibuffer +icons)         ; interactive buffer management
 
        :term
-       eshell            ; the elisp shell that works everywhere
-       term              ; basic terminal emulator for Emacs
        vterm             ; the best terminal emulation in Emacs
+       ;eshell            ; the elisp shell that works everywhere
+       ;term              ; basic terminal emulator for Emacs
 
        :checkers
        syntax              ; tasing you for every semicolon you forget
@@ -59,8 +59,8 @@
        (scheme +guile)            ; a fully conniving family of lisps
        (cc +lsp)               ; C/C++/Obj-C madness
        (zig +lsp)
-       ;;(clojure +lsp)           ; java with a lisp
        ;;(julia +lsp)             ; a better, faster MATLAB
+       ;;(clojure +lsp)           ; java with a lisp
        ;;(sh +lsp)                ; she sells {ba,z,fi}sh shells on the C xor
        ;;(rust +lsp)              ; Fe2O3.unwrap().unwrap().unwrap().unwrap()
        ;;(python +lsp)            ; beautiful is better than ugly

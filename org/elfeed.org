@@ -14,7 +14,6 @@
 **** https://www.kernel.org/feeds/kdist.xml
 *** Emacs :emacs:
 **** https://savannah.gnu.org/news/atom.php?group=emacs
-**** https://github.com/hlissner/doom-emacs/commits/develop.atom
 **** https://github.com/emacs-mirror/emacs/commits/feature/pgtk.atom
 *** Transmission :torrent:
 **** https://github.com/transmission/transmission/releases.atom

@@ -14,7 +14,7 @@
 *** homectl
 - home mounting/pam on login
 *** journalctl
-- binary logging for services/boot
+- ~journalctl -u SERVICE~
 *** sysctl
 - manages kernel params at runtime
 - ~net.ipv4.icmp_echo_ignore_all = 1~ in ~/etc/sysctl.conf~ or ~/etc/sysctl.d/90-override.conf~ to disable icmp
@@ -33,7 +33,7 @@
 **** timers
 - execution of units on timer to replace cron
 *** timedatectl
-- sytemd-timesyncd control
+- systemd-timesyncd control
 - client only and runs only when networkd
 - timedatectl set-ntp true
 - set-local-rtc to set hardware clock to localtime instead of UTC
@@ -301,3 +301,6 @@ DEADLINE: <2026-05-08 -5d>
   - +  ~./packaging/bundle-ebpf.sh "$PWD" "${pkgdir}/usr/lib/netdata/plugins.d/"~ in package
   - +  ~./packaging/bundle-libbpf.sh "$PWD"~ in build
 - setuid on ebpf plugin until reduced capabilites are supported ~sudo chmod 4750 /usr/lib/netdata/plugins.d/ebpf.plugin~
+** qrencode
+ -~qrencode -d 1 -s 1 -m 2 -t ASCIIi  -r ./key.pub -o small.ascii~
+ -~qrencode  --foreground=3aac59 -l Q -r ./key.pub -o green.png~
