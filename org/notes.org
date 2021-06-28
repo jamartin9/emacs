@@ -9,44 +9,21 @@
   - boot
 - single user mode on boot by adding single to the linux kernel line
 ** systemd
-*** bootctl
-- efi boot manager for stub kernel
-*** homectl
-- home mounting/pam on login
 *** journalctl
 - ~journalctl -u SERVICE~
 *** sysctl
-- manages kernel params at runtime
 - ~net.ipv4.icmp_echo_ignore_all = 1~ in ~/etc/sysctl.conf~ or ~/etc/sysctl.d/90-override.conf~ to disable icmp
 *** systemctl
-**** targets
-- trees of dependencies
 **** services
-- environment, dependence, restarting and overrides via edit
-- manual edits require daemon-reload
-- activation via path, dbus, socket and targets
-- hooks within services like ExecStartPost/ExecStopPost
+- ~edit~ doesn't require ~daemon-reload~
+- hooks within services like ~ExecStartPost/ExecStopPost~
 - list ~systemctl list-unit-files~
 - list failed ~systemctl list-units --state failed~
 - deps ~systemctl list-dependencies --reverse~
 - mask with ~systemctl mask swap.target~
-**** timers
-- execution of units on timer to replace cron
 *** timedatectl
-- systemd-timesyncd control
-- client only and runs only when networkd
-- timedatectl set-ntp true
-- set-local-rtc to set hardware clock to localtime instead of UTC
-*** udev rules
-- devices rules for joysticks/zfs of how to label/map/access
-- eudev is systemd free and maintained by gentoo
-*** logind
-- login manager
-- gentoo maintains systemd free version
-*** polkit/rtkit/udisks
-- uses client lib/dbus to config special permissions for user access to network/mounts etc
-*** keyctl
-- management of keys
+- systemd-timesyncd ~timedatectl set-ntp true~
+- ~set-local-rtc~ to set hardware clock to localtime instead of UTC
 *** NetworkManager
    - ~/usr/lib/NetworkManager/conf.d/20-connectivity.conf~ pings out
      - ~/etc/NetworkManager/conf.d/20-connectivity.conf~
@@ -55,12 +32,8 @@
      - enabled=false
 *** misc
 - ~systemd-analyze --blame~ for boot times
-- user level service units in home dir
-- systemctl reboots/shutdown/hibernates
-- systemctl changes run levels as either set-default/isolate via the rescue, multi-user and graphical targets
-- can manage containers/cgroups
-- auto/mount units are made from /etc/fstab
-- swap units and device units are needed for management
+- ~systemctl --user status~ for services in ~~/.config/systemd/user/~
+- ~systemctl set-default~ or ~isolate~ with runlevels/targets ~rescue~, ~multi-user~ and ~graphical~
 ** zfs
 *** install
 - If given whole disk zfs will leave small partition at begin/end and mark it with a wholedisk property.
@@ -253,13 +226,14 @@ DEADLINE: <2026-05-08 -5d>
 - digicert offers ev wildcard certs for .onion
 - tcp 9001 for relay default without bridge
 - set ~DNSPort 127.0.10.1:53~ and set pihole upstream for toring pihole connections without torsocks
+- authorized services with authorized_keys in service directory of client/service
 ** git
 - can update .git/config and submodules configs but should use porcelain
-- --depth implies single-branch thus refspec will be on single branch
+- ~--depth~ implies ~single-branch~ thus the refspec will be on single branch
   - ~git config remote.origin.fetch +refs/heads/*:refs/remotes/origin/*~
   - ~git fetch --depth=1 origin +refs/heads/*:refs/remotes/origin/*~
   - ~git fetch origin feature/branch --depth=1 && git checkout -b feature/branch FETCH_HEAD~
-- bundle to offline move repos
+- ~bundle~ to offline move repos
 ** termux
  - vol up/down and a/d to move left/right (other shortcuts too)
  - vol up long and Q for special keyboard
@@ -268,7 +242,7 @@ DEADLINE: <2026-05-08 -5d>
 - ~ntpd~ for persistence and ~ntpdate -s time.nist.gov~ for on demand
 - ~/usr/bin/hwclock -w~ update hardware clock in ~/etc/systemd/system/ntpdate.service.d/hwclock.conf~
 ** emacs
-  - broadwayd port 8080 with apps env var GDK_BACKEND=broadway
+- ~broadwayd~ port 8080 with apps env var GDK_BACKEND=broadway
 - ~edebug~ space is jump, ~?~ is intro.
 - ~early-init.el~ is before gui/tty
 - ~-Q~ for no site/init file and ~-nw~ for term
@@ -286,15 +260,8 @@ DEADLINE: <2026-05-08 -5d>
   - 172.16.x.x/12 is class B
   - 192.168.x.x/16 is class C
   - 127.x.x.x/8 is localhost
-- ~curl https://checkip.amazonaws.com~ for cli for checking ip or ~upnpc -s | grep ExternalIPAddress~
-- opensnitchd daemon for ebpf app filtering
-*** TODO opensnitch wip on incoming connections with ip/nf tables
-** kubernetes
-- static pod kubelet config for single service testing
-- kubeadm for setup
-** postgresql
-- jit --with-llvm
-- update with logical replication and pg_balancer or pg_upgrade
+- ~upnpc -s | grep ExternalIPAddress~
+*** TODO opensnitchd wip on incoming connections with ip/nf tables
 ** netdata
 - default port 19999
 - PKGBUILD edits for ebpf
@@ -302,5 +269,5 @@ DEADLINE: <2026-05-08 -5d>
   - +  ~./packaging/bundle-libbpf.sh "$PWD"~ in build
 - setuid on ebpf plugin until reduced capabilites are supported ~sudo chmod 4750 /usr/lib/netdata/plugins.d/ebpf.plugin~
 ** qrencode
- -~qrencode -d 1 -s 1 -m 2 -t ASCIIi  -r ./key.pub -o small.ascii~
- -~qrencode  --foreground=3aac59 -l Q -r ./key.pub -o green.png~
+ - ~qrencode -d 1 -s 1 -m 2 -t ASCIIi  -r ./key.pub -o small.ascii~
+ - ~qrencode  --foreground=3aac59 -l Q -r ./key.pub -o green.png~

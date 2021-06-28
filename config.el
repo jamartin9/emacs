@@ -25,28 +25,28 @@
         eshell-cmpl-cycle-completions t))
 
 (use-package! emms
-  :commands (emms-play-file emms-librefm-stream)
+  :commands (emms-play-file emms-librefm-stream emms-browser) ; librefm://globaltags/Classical
   :config
   (progn
         (require 'emms-setup)
         (emms-all)
         (emms-default-players)
         (setq emms-player-list '(emms-player-vlc))
-        ;;(require 'emms-librefm-stream)
-        ;;(setq emms-librefm-scrobbler-username "foo"
-        ;;      emms-librefm-scrobbler-pass
-        ;;      word "bar")
-        ;;(require 'emms--scrobbler)
-        ;;(require 'emms-browser)
-        ;;(setq emms-source-file-default-directory "~/Music/")
-        ;;(setq emms-playlist-buffer-name "*Music*")
+        (require 'emms-librefm-stream)
+        (emms-librefm-scrobbler-disable)
+        (setq emms-librefm-scrobbler-username "jaming"
+              emms-librefm-scrobbler-password (+pass-get-secret "librefm/jaming"))
+        (require 'emms-browser)
+        (setq emms-source-file-default-directory "~/Music/")
+        (setq emms-playlist-buffer-name "*Music*")
         (setq emms-info-asynchronously t)
         ;;(require 'emms-info-libtag)
         ;;(setq emms-info-functions '(emms-info-libtag))
         (require 'emms-mode-line)
         (emms-mode-line 1)
         (require 'emms-playing-time)
-        (emms-playing-time 1)))
+        (emms-playing-time 1)
+        ))
 
 (use-package! guix
   :commands guix-popup)
@@ -58,5 +58,4 @@
   :commands system-packages-ensure)
 
 (jam/init);; Setup my stuff
-;;(doom-display-benchmark-h 'return)
 ;;(all-the-icons-install-fonts)
