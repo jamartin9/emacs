@@ -80,6 +80,7 @@
    ;;"biber"
    ;;"texlive"
    ;;"aspell-dict-en"
+   ;;"kiwix-desktop"
 
    ;; media
    ;;"blender"

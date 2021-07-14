@@ -21,9 +21,9 @@
 (defun jam/syspkgs-install ()
   "Installs several packages"
   (interactive)
-  (let ((pkglist (list "expac" "sudo" "bash" "veracrypt" "ufw" "gufw" "signal-desktop" "torbrowser-launcher" "opensnitch-git" "pi-hole-server")) ;; expac is needed for syspkgs -_-
+  (let ((pkglist (list "expac" "sudo" "bash" "veracrypt" "ufw" "gufw" "signal-desktop" "torbrowser-launcher" "opensnitch-git" "pi-hole-server" "firejail" "ghidra" "steam-devices" "python-pip")) ;; expac is needed for syspkgs -_-
         (system-packages-use-sudo t)
-        (system-packages-package-manager 'pacman)) ;; "steam-devices" "python-pip"
+        (system-packages-package-manager 'pacman))
     ;;(use-package use-package-ensure-system-package
     ;;  :ensure t)
     (dolist (pkg pkglist)

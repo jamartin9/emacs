@@ -45,7 +45,7 @@
        (debugger +lsp)          ; FIXME stepping through code, to help you add bugs
        (lsp +peek)
        (magit +forge)             ; a git porcelain for Emacs
-       lookup ;(lookup +dictionary +offine +docsets +xwidget) ;ripgrep, sqlite3, wordnet ; navigate your code and its documentation
+       lookup ;(lookup +dictionary +offline +docsets +xwidget) ;ripgrep, sqlite3, wordnet ; navigate your code and its documentation
        (pass +auth)              ; password manager for nerds
        ;;(docker +lsp)
        ;;pdf               ; pdf enhancements
@@ -54,27 +54,28 @@
        ;;upload            ; map local to remote projects via ssh/ftp
 
        :lang
-       emacs-lisp        ; drown in parentheses
-       (org +gnuplot)               ; organize your plain life in plain text
-       (scheme +guile)            ; a fully conniving family of lisps
-       (cc +lsp)               ; C/C++/Obj-C madness
-       (zig +lsp)
-       ;;(julia +lsp)             ; a better, faster MATLAB
-       ;;(clojure +lsp)           ; java with a lisp
-       ;;(sh +lsp)                ; she sells {ba,z,fi}sh shells on the C xor
-       ;;(rust +lsp)              ; Fe2O3.unwrap().unwrap().unwrap().unwrap()
-       ;;(python +lsp)            ; beautiful is better than ugly
-       ;;(web +lsp)               ; the tubes
-       ;;(json +lsp)              ; At least it ain't XML
-       ;;(yaml +lsp)              ; JSON, but readable
-       ;;markdown          ; writing docs for people to ignore
-       ;;ledger            ; an accounting system in Emacs
-       ;;(javascript +lsp)       ; all(hope(abandon(ye(who(enter(here))))))
-       ;;data              ; config/data formats
+       emacs-lisp             ; drown in parentheses
+       (org +gnuplot)         ; organize your plain life in plain text
+       (scheme +guile)        ; a fully conniving family of lisps
+       (scala +lsp)           ; java, but good
+       (rust +lsp)            ; Fe2O3.unwrap().unwrap().unwrap().unwrap()
+       ;;(zig +lsp)             ; C, but simpler
+       ;;(cc +lsp)              ; C > C++ == 1
+       ;;(clojure +lsp)         ; java with a lisp
+       ;;(julia +lsp)           ; a better, faster MATLAB
+       ;;(sh +lsp)              ; she sells {ba,z,fi}sh shells on the C xor
+       ;;(python +lsp)          ; beautiful is better than ugly
+       ;;(go +lsp)              ; the hipster dialect
+       ;;(web +lsp)             ; the tubes
+       ;;(json +lsp)            ; At least it ain't XML
+       ;;(yaml +lsp)            ; JSON, but readable
+       ;;markdown               ; writing docs for people to ignore
+       ;;ledger                 ; an accounting system in Emacs
+       ;;(javascript +lsp)      ; all(hope(abandon(ye(who(enter(here))))))
+       ;;data                   ; config/data formats
        ;;(java +meghanada +lsp) ; the poster child for carpal tunnel syndrome
-       ;;(kotlin +lsp)            ; a better, slicker Java(Script)
-       ;;(go +lsp)         ; the hipster dialect
-       ;;latex             ; writing papers in Emacs has never been so fun
+       ;;(kotlin +lsp)          ; a better, slicker Java(Script)
+       ;;latex                  ; writing papers in Emacs has never been so fun
 
        :email
 

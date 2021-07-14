@@ -3,6 +3,7 @@
 *** Chia :crypto:
 **** https://github.com/Chia-Network/chia-blockchain/releases.atom
 **** https://www.youtube.com/feeds/videos.xml?channel_id=UChFkJ3OAUvnHZdiQISWdWPA :vid:
+**** https://www.youtube.com/feeds/videos.xml?channel_id=UCI7jc7zBcIvlISfCFLfSkCA :vid:
 *** Guile :lisp:scheme:
 **** https://www.gnu.org/software/guile/news/feed.xml
 *** Guix :packages:
@@ -33,14 +34,17 @@
 ** News :news:
 **** politics
 ***** videos :vid:
-****** https://www.youtube.com/feeds/videos.xml?channel_id=UCe02lGcO-ahAURWuxAJnjdA
+****** https://lbryfeed.melroy.org/channel/@TimcastNews:0
 ****** https://www.bitchute.com/feeds/rss/channel/Styxhexenhammer666
 ***** reddit :reddit:
 ****** http://www.reddit.com/r/news/.rss
 **** tech
 ***** HN :hn:
 ****** https://hnrss.org/newest
+***** Lobsters :lob:
+****** https://lobste.rs/rss
 ***** CVE :cve:
 ****** https://nvd.nist.gov/feeds/xml/cve/misc/nvd-rss-analyzed.xml
 ** Blogs :blogs:
 *** https://www.schneier.com/feed/atom
+*** https://greenwald.substack.com/feed

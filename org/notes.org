@@ -28,8 +28,10 @@
    - ~/usr/lib/NetworkManager/conf.d/20-connectivity.conf~ pings out
      - ~/etc/NetworkManager/conf.d/20-connectivity.conf~
      - [connectivity]
-     - uri=http://ping.manjaro.org/check_network_status.txt interval=0
+     - uri=http://ping.manjaro.org/check_network_status.txt
+     - interval=0
      - enabled=false
+   - conflicts with ~systemd-networkd~ & ~systemd-resolvd~
 *** misc
 - ~systemd-analyze --blame~ for boot times
 - ~systemctl --user status~ for services in ~~/.config/systemd/user/~
@@ -152,7 +154,7 @@
 - ~--expert --full-generate-key~ for new ecc key
 - ~--armor~ for ascii transferable key
 - ~--export~ , ~--export-secret-key~ and ~--import~  for recovery (can also do it for trust store)
-- pass uses gpg with git commits (if already init'd)
+- pass
   - ~pass init email@stuff.com~ for loading gpg key
   - ~pass add site/name~ with password
   - ~-m~ for multiline
@@ -160,10 +162,9 @@
 - ~pgp.mit.edu~ for keyserver that syncs with gpg and is known
 - ~hkps://keys.openpgp.org~ added support for cert spam
 - ~https://gitlab.com/openpgp-ca/openpgp-ca~ for new test ca
-- add as own signed commit in git branch for guix channel
 - ~gpg --edit-key XXXXX~ then ~trust~ and ~save~
 - encrypt ~gpg --encrypt --sign --armor -r a@email.com -r me@email.com~ and ~--sign-key~
-*** TODO investigate bip/mnemonics reproducible keys
+*** TODO bip/mnemonics reproducible keys
 *** TODO extend key expiration date :gpg:
 DEADLINE: <2026-05-08 -5d>
 ** firefox
@@ -202,7 +203,6 @@ DEADLINE: <2026-05-08 -5d>
 - ~-K~, ~edit~, ~repl~ and cli transformation options for testing
 - ~guix environment~ for build environment for packages using network/containers/env isolation
 - cleanup space with ~guix package -d && guix pull -d && guix gc~
-- can export packages with pack as tar.gz/docker
 - os templates for qemu images with ~guix system image -t qcow2 --save-provenance~
   - ~qemu-system-x86_64 -nic user,model=virtio-net-pci -enable-kvm -m 1024 -device virtio-blk,drive=myhd -drive if=none,file=$MY_IMAGE,id=myhd~
 - in os definition ~kernel-loadable-modules~ and service ~kernel-module-loader-service-type~
@@ -211,6 +211,7 @@ DEADLINE: <2026-05-08 -5d>
 - ~guix hash -xr .~ for the checksum of a repo
 - ~guix publish~ substitutes after exporting/importing key with ~guix archive~ or use nars with ~guix archive --export -r~
 - ~guix lint~ for packages
+- ~qemu-system-x86_64 -nic user,model=virtio-net-pci -enable-kvm -m 1024 -device virtio-blk,drive=myhd -drive if=none,file=$1,id=myhd~ to run vm
 ** shepherd
 - started with ~shepherd~ and stopped with ~herd stop root~
 - user services at ~$XDG_CONFIG_HOME/shepherd/init.scm~
@@ -223,6 +224,7 @@ DEADLINE: <2026-05-08 -5d>
 - https://duckduckgogg42xjoc72x3sjasowoarfbgcmvfimaftt6twagswzczad.onion/html is ddg
 - https://protonirockerxow.onion/ is protonmail v2
 - https://dns4torpnlfs2ifuz2s2yf3fc7rdmsbhm6rw75euj35pac6ap25zgqad.onion/ is cloudflare 1.1.1.1
+- MapAddress palladium.libera.chat libera75jm6of4wxpxt4aynol3xjmbtxgfyjpu34ss4d7r7q2v5zrpyd.onion is liberia.chat
 - digicert offers ev wildcard certs for .onion
 - tcp 9001 for relay default without bridge
 - set ~DNSPort 127.0.10.1:53~ and set pihole upstream for toring pihole connections without torsocks
